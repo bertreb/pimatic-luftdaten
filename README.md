@@ -2,11 +2,9 @@ pimatic-luftdaten
 =================
 
 Pimatic plugin that retrieves PM10 and pM2.5 sensordata from Luftdaten.info or a luftdaten local sensor.
-More info at https://luftdaten.info
+More info at https://luftdaten.info. 
 
-No API key required, uses: 
-- https://api.luftdaten.info/v1/sensor/{#sensorID}/
-- http://{#sensorIp}/data.json
+For the plugin no API key is required, it uses the Lufdaten.info API (https://api.luftdaten.info/v1/sensor/{#sensorID}/) or the Luftdaten local sensor API (http://{#sensorIp}/data.json).
 
 ### Manual installation
 
