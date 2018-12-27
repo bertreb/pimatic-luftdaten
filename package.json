@@ -17,7 +17,7 @@
     "aqicalc2.js"
   ],
   "version": "0.1.0",
-  "homepage": "",
+  "homepage": "https://github.com/bertreb/pimatic-luftdaten",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
