@@ -59,12 +59,12 @@ Add the device with the local IP address into the devices section:
 ### Usage
 
 This makes the following variables available to you in Pimatic.
-- $<luftdaten device id>.PM10	(LuftdatenDevice, LuftdatenHomeDevice)
-- $<luftdaten device id>.PM25	(LuftdatenDevice, LuftdatenHomeDevice) 
-- $<luftdaten device id>.TEMP	(LuftdatenHomeDevice)
-- $<luftdaten device id>.HUM	(LuftdatenHomeDevice)
-- $<luftdaten device id>.BAR	(LuftdatenHomeDevice)
-- $<luftdaten device id>.WIFI	(LuftdatenHomeDevice)
-- $<luftdaten device id>.AQI	(LuftdatenDevice, LuftdatenHomeDevice)
-- $<luftdaten device id>.AQI_CODE	(LuftdatenDevice, LuftdatenHomeDevice)
-- $<luftdaten device id>.AIR_AIR_QUALITY  (LuftdatenDevice, LuftdatenHomeDevice)
+* ${luftdaten device id}.PM10	(LuftdatenDevice, LuftdatenHomeDevice)
+* ${luftdaten device id}.PM25	(LuftdatenDevice, LuftdatenHomeDevice) 
+* ${luftdaten device id}.TEMP	(LuftdatenHomeDevice)
+* ${luftdaten device id}.HUM	(LuftdatenHomeDevice)
+* ${luftdaten device id}.BAR	(LuftdatenHomeDevice)
+* ${luftdaten device id}.WIFI	(LuftdatenHomeDevice)
+* ${luftdaten device id}.AQI	(LuftdatenDevice, LuftdatenHomeDevice)
+* ${luftdaten device id}.AQI_CODE	(LuftdatenDevice, LuftdatenHomeDevice)
+* ${luftdaten device id}.AIR_AIR_QUALITY  (LuftdatenDevice, LuftdatenHomeDevice)
