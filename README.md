@@ -15,16 +15,10 @@ cd pimatic-luftdaten
 npm install
 ```
 
-### Automatic installation
+### Automatic installation (not available yet)
 
-Add the plugin to the plugin section:
 
-    {
-      "plugin": "luftdaten",
-      "debug": false
-    }
-
-#### Device Configuration
+### Device Configuration
 
 There are 2 devices available
 
