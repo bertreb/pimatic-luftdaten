@@ -93,8 +93,8 @@ module.exports = (env) ->
           @_setAttribute "AQI", 0
           @_setAttribute "AQI_CODE", "GREEN"
           @_setAttribute "AQI_AIR_QUALITY", "Good"
-          env.logger.error(err.message)
-          env.logger.debug(err.stack)
+          #env.logger.error(err.message)
+          #env.logger.debug(err.stack)
          )
 
       @_currentRequest = @requestPromise unless @_currentRequest?
@@ -219,7 +219,7 @@ module.exports = (env) ->
           #@_setAttribute "AQI_CODE", "GREEN"
           #@_setAttribute "AQI_AIR_QUALITY", "Good"
           #env.logger.error(err.message)
-          env.logger.debug(err.stack)
+          #env.logger.debug(err.stack)
          )
 
       @_currentRequest = @requestPromise unless @_currentRequest?
