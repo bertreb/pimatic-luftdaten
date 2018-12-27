@@ -13,7 +13,8 @@
     "luftdaten.coffee",
     "README.md",
     "luftdaten-config-schema.coffee",
-    "device-config-schema.coffee"
+    "device-config-schema.coffee",
+    "aqicalc2.js"
   ],
   "version": "0.1.0",
   "homepage": "",
