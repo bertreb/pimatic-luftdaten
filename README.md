@@ -32,26 +32,27 @@ There are 2 devices available
 
 Gets PM10, PM2.5 data from specific sensor. The AQI data is calculated from that
 Add the device with the Sensor ID into the devices section:
-    {
+###    {
       "id": "luftdaten",
       "class": "LuftdatenDevice",
       "name": "Device for retrieving data from Luftdaten server",
       "sensorId": "Luftdaten ID of sensor",
       "minutes": 60
     }
-    
+###
+
 2. Luftdaten Home Device.
 
 Gets PM10, PM2.5, HUM, Temp, BAR. The AQI data is calculated from that
 Add the device with the local IP address into the devices section:
-    {
+###    {
       "id": "luftdaten",
       "class": "LuftdatenHomeDevice",
       "name": "Device for retrieving data from local sensor",
       "sensorIp": "local IP address of sensor",
       "minutes": 60
     }
-    
+###    
 
 ### Usage
 
