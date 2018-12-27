@@ -43,16 +43,15 @@ module.exports = (env) ->
         unit: ''
         acronym: 'Air quality'
 
-    constructor: (@config) ->
-      @id = @config.id
-      @name = @config.name
+    constructor: (config) ->
+      super(config.id, config.name)
+      @config = config
       @sensorId = @config.sensorId
       @url = "https://api.luftdaten.info/v1/sensor/#{@sensorId}/"
       @timeout = @config.interval * 60000 # Check for changes every interval in minutes
       @PM10_AQI = 0
       @PM25_AQI = 0
  
-      super()
       @requestData()
 
     destroy: () ->
@@ -93,8 +92,8 @@ module.exports = (env) ->
           @_setAttribute "AQI", 0
           @_setAttribute "AQI_CODE", "GREEN"
           @_setAttribute "AQI_AIR_QUALITY", "Good"
-          env.logger.error(err.message)
-          env.logger.debug(err.stack)
+          #env.logger.error(err.message)
+          #env.logger.debug(err.stack)
          )
 
       @_currentRequest = @requestPromise unless @_currentRequest?
@@ -169,14 +168,13 @@ module.exports = (env) ->
         unit: ''
         acronym: 'Air quality'
 
-    constructor: (@config) ->
-      @id = @config.id
-      @name = @config.name
+    constructor: (config) ->
+      super(config.id, config.name)
+      @config = config
       @sensorIp = @config.sensorIp
       @url = "http://#{@sensorIp}/data.json"
       @timeout = @config.interval * 60000 # Check for changes every interval in minutes
  
-      super()
       @requestData()
 
     destroy: () ->
@@ -219,7 +217,7 @@ module.exports = (env) ->
           #@_setAttribute "AQI_CODE", "GREEN"
           #@_setAttribute "AQI_AIR_QUALITY", "Good"
           #env.logger.error(err.message)
-          env.logger.debug(err.stack)
+          #env.logger.debug(err.stack)
          )
 
       @_currentRequest = @requestPromise unless @_currentRequest?
