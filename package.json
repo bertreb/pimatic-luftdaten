@@ -1,23 +1,14 @@
 {
   "name": "pimatic-luftdaten",
-  "description": "Provides PM10 and PM 2.5 air quality data from Luftdaten or local sensor",
-  "author": {
-    "name": "Bert Gierveld",
-    "email": "gitbertreb@gmail.com"
+  "version": "1.0.0",
+  "description": "Pimatic plugin for Luftdaten sensors",
+  "main": "luftdaten.coffee",
+  "dependencies": {
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2",
+    "pimatic": "^0.9.43"
   },
-  "contributors": [
-  ],
-  "main": "luftdaten",
-  "license": "GPL-2.0",
-  "files": [
-    "luftdaten.coffee",
-    "README.md",
-    "luftdaten-config-schema.coffee",
-    "device-config-schema.coffee",
-    "aqicalc2.js"
-  ],
-  "version": "0.1.0",
-  "homepage": "https://github.com/bertreb/pimatic-luftdaten",
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -29,45 +20,10 @@
     "pimatic",
     "luftdaten"
   ],
-  "configSchema": "luftdaten-config-schema.coffee",
-  "dependencies": {
-    "request": "^2.79.0",
-    "request-promise": "^4.1.1"
-  },
-  "peerDependencies": {
-    "pimatic": ">=0.8.0 <1.0.0"
-  },
-  "engines": {
-    "node": ">0.8.x",
-    "npm": ">1.1.x"
-  },
-  "gitHead": "",
+  "author": "bertreb",
+  "license": "ISC",
   "bugs": {
-    "url": ""
+    "url": "https://github.com/bertreb/pimatic-luftdaten/issues"
   },
-  "_id": "pimatic-luftdaten@0.1.0",
-  "_shasum": "",
-  "_from": "pimatic-luftdaten@0.1.0",
-  "_npmVersion": "3.10.9",
-  "_nodeVersion": "6.9.5",
-  "_npmUser": {
-    "name": "bertreb",
-    "email": "gitbertreb@gmail.com"
-  },
-  "dist": {
-    "shasum": "",
-    "tarball": ""
-  },
-  "maintainers": [
-    {
-      "name": "bertreb",
-      "email": "gitbertreb@gmail.com"
-    }
-  ],
-  "_npmOperationalInternal": {
-    "host": "",
-    "tmp": ""
-  },
-  "directories": {},
-  "_resolved": ""
+  "homepage": "https://github.com/bertreb/pimatic-luftdaten#readme"
 }
