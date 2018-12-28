@@ -8,7 +8,7 @@
     "request-promise": "^4.1.1"
   },
   "peerDependencies": {
-    "pimatic": ">=0.8.0 <1.0.0"
+    "pimatic": "0.9.*"
   },
   "engines": {
     "node": ">= 4",
