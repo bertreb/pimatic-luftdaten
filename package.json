@@ -2,7 +2,7 @@
   "name": "pimatic-luftdaten",
   "version": "1.0.0",
   "description": "Pimatic plugin for Luftdaten sensors",
-  "main": "luftdaten.coffee",
+  "main": "luftdaten",
   "dependencies": {
     "request": "^2.88.0",
     "request-promise": "^4.2.2"
