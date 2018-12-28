@@ -9,7 +9,7 @@
     "pimatic": "^0.9.43"
   },
   "devDependencies": {},
-  "configSchema": "pimatic-luftdaten-config-schema.coffee",
+  "configSchema": "luftdaten-config-schema.coffee",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
