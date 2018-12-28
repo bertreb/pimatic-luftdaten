@@ -4,11 +4,15 @@
   "description": "Pimatic plugin for Luftdaten sensors",
   "main": "luftdaten",
   "dependencies": {
-    "request": "^2.88.0",
-    "request-promise": "^4.2.2"
+    "request": "^2.79.0",
+    "request-promise": "^4.1.1"
   },
   "peerDependencies": {
     "pimatic": ">=0.8.0 <1.0.0"
+  },
+  "engines": {
+    "node": ">0.8.x",
+    "npm": ">1.1.x"
   },
   "configSchema": "luftdaten-config-schema.coffee",
   "scripts": {
