@@ -1,4 +1,4 @@
-'use strict';
+//'use strict';
 
 var aqi_breakpoints = [
     [0, 50],
