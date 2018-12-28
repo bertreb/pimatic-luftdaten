@@ -5,8 +5,10 @@
   "main": "luftdaten.coffee",
   "dependencies": {
     "request": "^2.88.0",
-    "request-promise": "^4.2.2",
-    "pimatic": "^0.9.43"
+    "request-promise": "^4.2.2"
+  },
+  "peerDependencies": {
+    "pimatic": ">=0.8.0 <1.0.0"
   },
   "devDependencies": {},
   "configSchema": "luftdaten-config-schema.coffee",
