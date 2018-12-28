@@ -10,7 +10,6 @@
   "peerDependencies": {
     "pimatic": ">=0.8.0 <1.0.0"
   },
-  "devDependencies": {},
   "configSchema": "luftdaten-config-schema.coffee",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
