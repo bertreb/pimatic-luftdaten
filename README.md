@@ -20,7 +20,7 @@ To install the plugin add the plugin to the config.json of pimatic:
 
 There are 2 devices available
 
-1. Luftdaten Device.
+* Luftdaten Device.
 
 Gets PM10, PM2.5 data from specific sensor. The Air Quality Index (AQI) data is calculated from that.
 Add the device with the Sensor ID into the devices section:
@@ -34,7 +34,7 @@ Add the device with the Sensor ID into the devices section:
     }
 ###
 
-2. Luftdaten Home Device.
+* Luftdaten Home Device.
 
 Gets PM10, PM2.5, HUM, Temp, BAR. The Air Quality Index (AQI) data is calculated from that.
 Add the device with the local IP address into the devices section:
