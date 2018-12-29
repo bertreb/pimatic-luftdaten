@@ -14,7 +14,6 @@ To install the plugin add the plugin to the config.json of pimatic:
     {
       "plugin": "luftdaten"
     }
-###
 
 ### Device Configuration
 
@@ -32,7 +31,7 @@ Add the device with the Sensor ID into the devices section:
       "sensorId": "Luftdaten ID of sensor",
       "minutes": 60
     }
-###
+
 
 * Luftdaten Home Device.
 
@@ -46,7 +45,6 @@ Add the device with the local IP address into the devices section:
       "sensorIp": "local IP address of sensor",
       "minutes": 60
     }
-###    
 
 ### Usage
 
