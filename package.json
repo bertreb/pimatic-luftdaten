@@ -25,7 +25,7 @@
     "luftdaten"
   ],
   "author": "bertreb",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/bertreb/pimatic-luftdaten/issues"
   },
