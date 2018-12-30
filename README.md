@@ -1,8 +1,7 @@
-pimatic-luftdaten
-=================
+# pimatic-luftdaten
 
 Pimatic plugin that retrieves PM10 and PM2.5 sensordata from Luftdaten.info or a luftdaten local sensor.
-More info at https://luftdaten.info, where you can find instructions for building a luftdaten sensor and how to get de Sensor ID or local IP address.
+More info at [luftdaten.info](https://luftdaten.info), where you can find instructions for building a luftdaten sensor and how to get de Sensor ID or local IP address.
 
 For the plugin no API key is required, it uses the lufdaten.info API (https://api.luftdaten.info/v1/sensor/{#sensorID}/) or the luftdaten local sensor API (http://{#sensorIP}/data.json).
 
@@ -10,11 +9,11 @@ For the plugin no API key is required, it uses the lufdaten.info API (https://ap
 
 To install the plugin add the plugin to the config.json of pimatic:
 
-###    
+```    
     {
       "plugin": "luftdaten"
     }
-
+```
 ### Device Configuration
 
 There are 2 devices available
@@ -23,7 +22,7 @@ There are 2 devices available
 
 Gets PM10, PM2.5 data from specific sensor. The Air Quality Index (AQI) data is calculated from that.
 Add the device with the Sensor ID into the devices section:
-###    
+```    
     {
       "id": "luftdaten",
       "class": "LuftdatenDevice",
@@ -31,13 +30,13 @@ Add the device with the Sensor ID into the devices section:
       "sensorId": "Luftdaten ID of sensor",
       "minutes": 60
     }
-
+```
 
 * Luftdaten Home Device.
 
 Gets PM10, PM2.5, HUM, Temp, BAR. The Air Quality Index (AQI) data is calculated from that.
 Add the device with the local IP address into the devices section:
-###    
+```    
     {
       "id": "luftdaten",
       "class": "LuftdatenHomeDevice",
@@ -45,7 +44,7 @@ Add the device with the local IP address into the devices section:
       "sensorIp": "local IP address of sensor",
       "minutes": 60
     }
-
+```
 ### Usage
 
 This makes the following variables available to you in Pimatic.
