@@ -1,7 +1,7 @@
 # pimatic-luftdaten
 
 Pimatic plugin that retrieves PM10 and PM2.5 sensordata from Luftdaten.info or a luftdaten local sensor.
-More info at [luftdaten.info](https://luftdaten.info), where you can find instructions for building a luftdaten sensor and how to get de Sensor ID or local IP address.
+More info at [luftdaten.info](https://luftdaten.info), where you can find instructions for building a luftdaten sensor and how to get de Sensor ID or local IP address. The Air Quality Index (AQI) is calculated from PM10 and PM2.5 sensor data and is based on the [U.S. EPA](https://en.wikipedia.org/wiki/Air_quality_index#United_States).
 
 For the plugin no API key is required, it uses the lufdaten.info API (https://api.luftdaten.info/v1/sensor/{#sensorID}/) or the luftdaten local sensor API (http://{#sensorIP}/data.json).
 
