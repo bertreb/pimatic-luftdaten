@@ -8,7 +8,6 @@ For the plugin no API key is required, it uses the lufdaten.info API (https://ap
 ### Installation
 
 To install the plugin add the plugin to the config.json of pimatic:
-
 ```    
     {
       "plugin": "luftdaten"
