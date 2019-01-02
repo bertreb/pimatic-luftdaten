@@ -1,6 +1,6 @@
 {
   "name": "pimatic-luftdaten",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Pimatic plugin for luftdaten sensors",
   "main": "luftdaten",
   "dependencies": {
