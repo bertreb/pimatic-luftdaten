@@ -73,8 +73,8 @@ module.exports = (env) ->
             PM10 = d[0].sensordatavalues[0].value
             PM25 = d[0].sensordatavalues[1].value
 
-          PM10 = Number(Math.round(PM10+'e1')+'e-1') #SDS011 PM10
-          PM25 = Number(Math.round(PM25+'e1')+'e-1') #SDS011 PM2.5
+          PM10 = Number(Math.round(PM10+'e1')+'e-1') #PM10
+          PM25 = Number(Math.round(PM25+'e1')+'e-1') #PM2.5
           lAqi = Math.max(aqi.pm10(PM10), aqi.pm25(PM25))
           lAqi = Math.min(lAqi, 500)
           lAqi = Math.max(lAqi, 0)
@@ -192,10 +192,14 @@ module.exports = (env) ->
 
           PM10 = Number(Math.round(d.sensordatavalues[0].value+'e1')+'e-1') #SDS011 PM10
           PM25 = Number(Math.round(d.sensordatavalues[1].value+'e1')+'e-1') #SDS011 PM2.5
-          TEMP = Number(Math.round(d.sensordatavalues[2].value+'e1')+'e-1') #BME280_temperature
-          HUM = Number(Math.round(d.sensordatavalues[3].value+'e1')+'e-1') #BME280_humidity
-          BAR = Number(Math.round(d.sensordatavalues[4].value/100+'e1')+'e-1') #BME280_pressure
-          WIFI = Number(Math.round(d.sensordatavalues[8].value+'e1')+'e-1') #signal
+          TEMP = Number(Math.round(d.sensordatavalues[2].value+'e1')+'e-1') #Temperature
+          HUM = Number(Math.round(d.sensordatavalues[3].value+'e1')+'e-1') #Humidity
+          if d.sensordatavalues[8]?
+            BAR = Number(Math.round(d.sensordatavalues[4].value/100+'e1')+'e-1') #Pressure value
+            WIFI = Number(Math.round(d.sensordatavalues[8].value+'e1')+'e-1') #signal
+          else
+            BAR = 0 #no pressure value
+            WIFI = Number(Math.round(d.sensordatavalues[7].value+'e1')+'e-1') #signal
 
           lAqi = Math.max(aqi.pm10(PM10), aqi.pm25(PM25))
           lAqi = Math.min(lAqi, 500)
@@ -213,11 +217,11 @@ module.exports = (env) ->
           @_currentRequest = Promise.resolve()
         )
         .catch((err) =>
-          #@_setAttribute "PM10", 0 
-          #@_setAttribute "PM25", 0
-          #@_setAttribute "AQI", 0
-          #@_setAttribute "AQI_CODE", "GREEN"
-          #@_setAttribute "AQI_AIR_QUALITY", "Good"
+          @_setAttribute "PM10", 0 
+          @_setAttribute "PM25", 0
+          @_setAttribute "AQI", 0
+          @_setAttribute "AQI_CODE", "GREEN"
+          @_setAttribute "AQI_AIR_QUALITY", "Good"
           #env.logger.error(err.message)
           #env.logger.debug(err.stack)
          )
