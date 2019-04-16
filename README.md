@@ -51,7 +51,7 @@ This makes the following variables available to you in Pimatic.
 * ${luftdaten device id}.PM25 (LuftdatenDevice, LuftdatenHomeDevice) 
 * ${luftdaten device id}.TEMP (LuftdatenHomeDevice)
 * ${luftdaten device id}.HUM  (LuftdatenHomeDevice)
-* ${luftdaten device id}.BAR  (LuftdatenHomeDevice)
+* ${luftdaten device id}.BAR  (LuftdatenHomeDevice) if BAR sensor is available otherwise the value is 0
 * ${luftdaten device id}.WIFI (LuftdatenHomeDevice)
 * ${luftdaten device id}.AQI  (LuftdatenDevice, LuftdatenHomeDevice)
 * ${luftdaten device id}.AQI_CODE (LuftdatenDevice, LuftdatenHomeDevice)
