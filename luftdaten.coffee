@@ -64,22 +64,23 @@ module.exports = (env) ->
       @requestPromise = rp(@url)
         .then((data) =>
           d = JSON.parse(data)
-          #env.logger.debug(d[1].sensordatavalues[0])
-
-          if d[1]
-            PM10 = d[1].sensordatavalues[0].value
-            PM25 = d[1].sensordatavalues[1].value
-          else if d[0]
-            PM10 = d[0].sensordatavalues[0].value
-            PM25 = d[0].sensordatavalues[1].value
-
-          PM10 = Number(Math.round(PM10+'e1')+'e-1') #PM10
-          PM25 = Number(Math.round(PM25+'e1')+'e-1') #PM2.5
+          #reset all values
+          PM10 = PM25 = 0
+  
+          if d[1] # test if second record is available and use that newest data
+            dd = d[1]
+          else if d[0] # use first record
+            dd = d[0]
+          for k, val of dd.sensordatavalues
+            if (val.value_type).match("P1")
+              PM10 = Number(Math.round(val.value+'e1')+'e-1') #PM10
+            if (val.value_type).match("P2")
+              PM25 = Number(Math.round(val.value+'e1')+'e-1') #PM2.5
+  
           lAqi = Math.max(aqi.pm10(PM10), aqi.pm25(PM25))
           lAqi = Math.min(lAqi, 500)
           lAqi = Math.max(lAqi, 0)
-          #lAqi = aqi(PM10, PM25)
- 
+  
           @_setAttribute "PM10", PM10
           @_setAttribute "PM25", PM25
           @_setAttribute "AQI", lAqi
@@ -91,8 +92,8 @@ module.exports = (env) ->
           @_setAttribute "PM10", 0 
           @_setAttribute "PM25", 0
           @_setAttribute "AQI", 0
-          @_setAttribute "AQI_CODE", "GREEN"
-          @_setAttribute "AQI_AIR_QUALITY", "Good"
+          @_setAttribute "AQI_CODE", "Unknown"
+          @_setAttribute "AQI_AIR_QUALITY", "Unknown"
           #env.logger.error(err.message)
           #env.logger.debug(err.stack)
          )
@@ -188,18 +189,21 @@ module.exports = (env) ->
       @requestPromise = rp(@url)
         .then((data) =>
           d = JSON.parse(data)
-          #env.logger.debug(d.sensordatavalues)
-
-          PM10 = Number(Math.round(d.sensordatavalues[0].value+'e1')+'e-1') #SDS011 PM10
-          PM25 = Number(Math.round(d.sensordatavalues[1].value+'e1')+'e-1') #SDS011 PM2.5
-          TEMP = Number(Math.round(d.sensordatavalues[2].value+'e1')+'e-1') #Temperature
-          HUM = Number(Math.round(d.sensordatavalues[3].value+'e1')+'e-1') #Humidity
-          if d.sensordatavalues[8]?
-            BAR = Number(Math.round(d.sensordatavalues[4].value/100+'e1')+'e-1') #Pressure value
-            WIFI = Number(Math.round(d.sensordatavalues[8].value+'e1')+'e-1') #signal
-          else
-            BAR = 0 #no pressure value
-            WIFI = Number(Math.round(d.sensordatavalues[7].value+'e1')+'e-1') #signal
+          #reset all values
+          PM10 = PM25 = TEMP = HUM = BAR = WIFI = 0
+          for k, val of d.sensordatavalues
+              if (val.value_type).match("P1")
+                PM10 = Number(Math.round(val.value+'e1')+'e-1') #PM10
+              if (val.value_type).match("P2")
+                PM25 = Number(Math.round(val.value+'e1')+'e-1') #PM2.5
+              if (val.value_type).match("temperature")
+                TEMP = Number(Math.round(val.value+'e1')+'e-1') #Temperature
+              if (val.value_type).match("humidity")
+                HUM = Number(Math.round(val.value+'e1')+'e-1') #Humidity
+              if (val.value_type).match("signal")
+                WIFI = Number(Math.round(val.value+'e1')+'e-1') #Signal
+              if (val.value_type).match("pressure")
+                BAR = Number(Math.round(val.value/100+'e1')+'e-1') #Pressure
 
           lAqi = Math.max(aqi.pm10(PM10), aqi.pm25(PM25))
           lAqi = Math.min(lAqi, 500)
@@ -220,8 +224,8 @@ module.exports = (env) ->
           @_setAttribute "PM10", 0 
           @_setAttribute "PM25", 0
           @_setAttribute "AQI", 0
-          @_setAttribute "AQI_CODE", "GREEN"
-          @_setAttribute "AQI_AIR_QUALITY", "Good"
+          @_setAttribute "AQI_CODE", "Unknown"
+          @_setAttribute "AQI_AIR_QUALITY", "Unknown"
           #env.logger.error(err.message)
           #env.logger.debug(err.stack)
          )
