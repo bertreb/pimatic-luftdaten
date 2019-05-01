@@ -1,6 +1,6 @@
 {
   "name": "pimatic-luftdaten",
-  "version": "0.2.6",
+  "version": "0.3.0",
   "description": "Pimatic plugin for luftdaten sensors",
   "main": "luftdaten",
   "dependencies": {
@@ -24,7 +24,7 @@
     "pimatic",
     "luftdaten"
   ],
-  "author": "bertreb",
+  "author": "Bert Gierveld <gitbertreb@gmail.com> (https://github.com/bertreb/pimatic-luftdaten)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/bertreb/pimatic-luftdaten/issues"
