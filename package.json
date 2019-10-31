@@ -3,6 +3,14 @@
   "version": "0.3.0",
   "description": "Pimatic plugin for luftdaten sensors",
   "main": "luftdaten",
+  "files": [
+    "luftdaten.coffee",
+    "luftdaten-config-schema.coffee",
+    "device-config-schema.coffee",
+    "aqicalc2.js",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {
     "request": "^2.79.0",
     "request-promise": "^4.1.1"

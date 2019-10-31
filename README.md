@@ -48,7 +48,7 @@ Add the device with the local IP address into the devices section:
 
 This makes the following variables available to you in Pimatic.
 * ${luftdaten device id}.PM10 (LuftdatenDevice, LuftdatenHomeDevice)
-* ${luftdaten device id}.PM25 (LuftdatenDevice, LuftdatenHomeDevice) 
+* ${luftdaten device id}.PM25 (LuftdatenDevice, LuftdatenHomeDevice)
 * ${luftdaten device id}.TEMP (LuftdatenHomeDevice)
 * ${luftdaten device id}.HUM  (LuftdatenHomeDevice)
 * ${luftdaten device id}.BAR  (LuftdatenHomeDevice) if BAR sensor is available otherwise the value is 0
