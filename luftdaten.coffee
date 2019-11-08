@@ -149,13 +149,8 @@ module.exports = (env) ->
             return Promise.resolve @attributeValues[_attr]
           )
 
-      @attributes["DISTANCE"].hidden = true
-      @attributes["SENSOR_ID"].hidden = true
-
       @requestData()
-
       super()
-
 
     destroy: () ->
       @requestPromise.cancel() if @requestPromise?
