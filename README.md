@@ -36,11 +36,11 @@ Add the device to the devices section:
       "sensorId": "Luftdaten ID of the required sensor",
       "latitude": latitude coordinate of the location you want info for,
       "longitude": longitude coordinate of the location you want info for,
-      "range": the range within for a sensor is searched, default 1000 meters,
+      "radius": the radius in km within for the closest sensor is searched, default 1 km,
       "minutes": 60, time between updates
     }
 ```
-You need to configure a sensorId or a latitude/longitude/range combination. If you use de lat/lon option, make sure the range is not to narrow (no sensors) or to broad (too many sensors in a too broad area). In the debug mode you can the number sensor within the specified range. Try to get the number of sensors back to 1 by reducing the range. 
+You need to configure a sensorId or a latitude/longitude/range combination. If you use de lat/lon option, make sure the range is not to narrow (no sensors) or to broad. Too many sensors in a too broad area. The device will automaticly search for the closest sensors to get a complete data set. In the debug mode you can the number sensor within the specified range. Try to get the number of sensors back to 1 by reducing the range.
 
 * Luftdaten Home Device.
 
@@ -71,6 +71,9 @@ This makes the following variables available to you in Pimatic for both type of 
 * ${luftdaten device id}.AQI              - index between 0 (very good) and 500 (very bad) air quality
 * ${luftdaten device id}.AQI_CODE         - color code of airquality (green - purple)
 * ${luftdaten device id}.AIR_AIR_QUALITY  - textual info on air quality level
+* ${luftdaten device id}.SENSOR_ID        - Luftdaten ID of the sensor
+* ${luftdaten device id}.DISTANCE         - Distance to the sensor (km)
+
 
 In the gui an attribute is not visible when no value is received. The variable is set to 0 is no value is received.
 
