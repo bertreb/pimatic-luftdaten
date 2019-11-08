@@ -8,7 +8,20 @@ module.exports ={
       sensorId:
         description: "Sensor ID of Luftdaten sensor"
         type: "string"
-        required: true
+        required: false
+      latitude:
+        description: "Latitude of the location you want luftdaten info for"
+        type: "number"
+        required: false
+      longitude:
+        description: "Longitude of the location you want luftdaten info for"
+        type: "number"
+        required: false
+      radius:
+        description: "The radius in km for detecting a luftdaten sensor, default is 1 km"
+        type: "number"
+        default: 1
+        required: false
       interval:
         description: "Minutes for updating data"
         type: "integer"
