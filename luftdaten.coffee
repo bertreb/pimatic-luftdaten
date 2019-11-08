@@ -17,11 +17,17 @@ module.exports = (env) ->
 
   class LuftdatenDevice extends env.devices.Device
     attributes:
+      SENSOR_ID:
+        description: "The ID(s) of the sensor(s)"
+        type: "string"
+        unit: ''
+        acronym: 'sensor'
+        hidden: false
       DISTANCE:
         description: "The distance of the sensor in km"
         type: "number"
         unit: 'km'
-        acronym: 'sensor'
+        acronym: 'distance'
         hidden: false
       PM10:
         description: "The PM10 air quality"
@@ -134,6 +140,7 @@ module.exports = (env) ->
       @attributeValues.AQI_CODE = lastState?.AQI_CODE?.value or 0
       @attributeValues.AQI_AIR_QUALITY = lastState?.AQI_AIR_QUALITY?.value or 0
       @attributeValues.DISTANCE = lastState?.DISTANCE?.value or 0
+      @attributeValues.SENSOR_ID = lastState?.SENSOR_ID?.value or 0
 
       for _attr of @attributes
         do (_attr) =>
@@ -143,6 +150,7 @@ module.exports = (env) ->
           )
 
       @attributes["DISTANCE"].hidden = true
+      @attributes["SENSOR_ID"].hidden = true
 
       @requestData()
 
@@ -160,6 +168,7 @@ module.exports = (env) ->
           d = JSON.parse(data)
           @_luftdaten = {}
           @_sensors = []
+          @_usedSensors = ""
           if Array.isArray(d)
             @_luftdaten = d[0]
             @_lastDistance = 10000
@@ -169,14 +178,25 @@ module.exports = (env) ->
                 if @_dist <= @_lastDistance
                   @_lastDistance = @_dist
                   @attributeValues.DISTANCE = @_dist
-                  @attributes["DISTANCE"].hidden = false                
+                  @attributes["DISTANCE"].hidden = false
+                  @attributeValues.SENSOR_ID = _record.sensor.id
+                  @attributes["SENSOR_ID"].hidden = false
                   for _val in _record.sensordatavalues
+                    # update data will closer values
+                    if _val.value_type in @_luftdaten.sensordatavalues
+                      @_luftdaten.sensordatavalues[_val.value_type].value = String _record.sensordatavalues[_val.value_type].value
+                    #add missing values               
                     unless @_luftdaten.sensordatavalues[_val.value_type]?
                       env.logger.debug _val.value_type + " added to @_luftdaten.sensordatavalues "
                       @_luftdaten.sensordatavalues[_val.value_type] =
                         value_type: _val.value_type
                         value: String _val.value
-                        id: _val.id              
+                        id: _val.id 
+              else if @sensorId?
+                @attributeValues.SENSOR_ID = _record.sensor.id
+                @attributes["SENSOR_ID"].hidden = false
+                # ...
+                          
               @_sensors.push _record.sensor.id unless _record.sensor.id in @_sensors
           else
             @_luftdaten = d
@@ -184,7 +204,7 @@ module.exports = (env) ->
           if not @_luftdaten?
             env.logger.debug "no data from " + @url
             return
-
+          
           for k, val of @_luftdaten.sensordatavalues
             if (val.value_type).match("P1")
               @attributeValues.PM10 = Number(Math.round(val.value+'e1')+'e-1')
