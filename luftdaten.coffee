@@ -1,6 +1,7 @@
 module.exports = (env) ->
   rp = require 'request-promise'
   aqi = require './aqicalc2.js'
+  dba = require './dbacalc.js'
 
   class Luftdaten extends env.plugins.Plugin
     init: (app, @framework, @config) =>
@@ -64,6 +65,11 @@ module.exports = (env) ->
         type: "number"
         unit: 'dBm'
         acronym: 'W'
+      NOISE_LEVEL:
+        description: "Noise level"
+        type: "string"
+        unit: ''
+        acronym: 'Noise level'
       NOISE_Leq:
         description: "Noise"
         type: "number"
@@ -110,6 +116,7 @@ module.exports = (env) ->
       @urlLocal = "http://#{@sensorId}/data.json"
       @url = null
       @timeout = @config.interval * 60000 # Check for changes every interval in minutes
+      @maxDistance = 25 # km
 
       if @sensorId?
         if Number.isInteger(Number @sensorId)
@@ -133,6 +140,7 @@ module.exports = (env) ->
       @attributeValues.BAR = lastState?.BAR?.value or 0.0
       @attributeValues.BAR_SEA = lastState?.BAR_SEA?.value or 0.0
       @attributeValues.WIFI = lastState?.WIFI?.value or 0
+      @attributeValues.NOISE_LEVEL = lastState?.NOISE_LEVEL?.value or ""
       @attributeValues.NOISE_Leq = lastState?.NOISE_Leq?.value or 0.0
       @attributeValues.NOISE_Lmin = lastState?.NOISE_Lmin?.value or 0.0
       @attributeValues.NOISE_Lmax = lastState?.NOISE_Lmax?.value or 0.0
@@ -164,7 +172,7 @@ module.exports = (env) ->
           @_luftdaten = {}
           if Array.isArray(d)
             @_luftdaten = d[0]
-            @_lastDistance = 10000
+            @_lastDistance = @maxDistance
             for _record in d
               if @sensorId isnt null
                 #check if most recent record is used
@@ -235,6 +243,8 @@ module.exports = (env) ->
             if (val.value_type).match("noise_LAeq")
               @attributeValues.NOISE_Leq = Number(Math.round(val.value+'e1')+'e-1')
               @attributes.NOISE_Leq.hidden = false
+              @attributeValues.NOISE_LEVEL = dba.label(@attributeValues.NOISE_Leq)
+              @attributes.NOISE_LEVEL.hidden = false
             if (val.value_type).match("noise_LA_min")
               @attributeValues.NOISE_Lmin = Number(Math.round(val.value+'e1')+'e-1')
               @attributes.NOISE_Lmin.hidden = false
