@@ -1,15 +1,16 @@
 # pimatic-luftdaten
 
 Pimatic plugin retrieves air quality sensordata from Luftdaten.info or a luftdaten local sensor. Depending on the sensor the following information can be retrieved:
-- PM (10 and 2.5)
+- Particulate Matter (PM 10 and PM 2.5)
 - Temperature
 - Humidity
 - Pressure
-- Noise
+- Noise Level
 
-More info at [luftdaten.info](https://luftdaten.info), where you can find instructions for building a luftdaten sensor and how to get de Sensor ID or local IP address. The Air Quality Index (AQI) is calculated from PM10 and PM2.5 sensor data and is based on the [U.S. EPA](https://en.wikipedia.org/wiki/Air_quality_index#United_States). Recently a Noise sensor is added to supported the Luftdaten sensor. The plugin is capable of receiving that info.
+More info at [luftdaten.info](https://luftdaten.info), where you can find instructions for building a luftdaten sensor (incl noise sensor) and how to get de Sensor ID or local IP address. The Air Quality Index (AQI) is calculated from PM10 and PM2.5 sensor data and is based on the [U.S. EPA](https://en.wikipedia.org/wiki/Air_quality_index#United_States).
+The plugin supports the Luftdaten Noise sensor. An dBa classification is added to the noise levels. 
 
-The plugin enables automaticly attributes when data for these attributes is received. Sometimes a refresh of the gui is needed to see the values.
+The plugin enables automatically attributes when data for these attributes is received. Sometimes a refresh of the gui is needed to see the values.
 
 For the plugin no API key is required, it uses the open lufdaten.info API or the local sensor API.
 
