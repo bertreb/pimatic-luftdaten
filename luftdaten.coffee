@@ -201,7 +201,7 @@ module.exports = (env) ->
                       @_luftdaten.sensordatavalues[_val.value_type].value = String _record.sensordatavalues[_val.value_type].value
                     #add missing values
                     unless @_luftdaten.sensordatavalues[_val.value_type]?
-                      env.logger.debug _val.value_type + " added to @_luftdaten.sensordatavalues "
+                      env.logger.debug _val.value_type + " added to sensor data, sensorID: " + _record.sensor.id
                       @_luftdaten.sensordatavalues[_val.value_type] =
                         value_type: _val.value_type
                         value: String _val.value
