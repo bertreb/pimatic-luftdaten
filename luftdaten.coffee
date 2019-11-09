@@ -116,7 +116,9 @@ module.exports = (env) ->
       @urlLocal = "http://#{@sensorId}/data.json"
       @url = null
       @timeout = @config.interval * 60000 # Check for changes every interval in minutes
-      @maxDistance = 25 # km
+      @maxDistance = 50 # km
+      if @radius > @maxDistance
+        env.logger.info "Radius is too large and is set to maximum = " + @maxDistance + " km"
 
       if @sensorId?
         if Number.isInteger(Number @sensorId)
@@ -172,7 +174,7 @@ module.exports = (env) ->
           @_luftdaten = {}
           if Array.isArray(d)
             @_luftdaten = d[0]
-            @_lastDistance = @maxDistance
+            @_lastDistance = Math.min(@radius, @maxDistance)
             for _record in d
               if @sensorId isnt null
                 #check if most recent record is used
@@ -185,7 +187,7 @@ module.exports = (env) ->
                   @attributeValues.DISTANCE = @_dist
                   @attributes["DISTANCE"].hidden = false
               else if @latiude isnt null and @longitude isnt null
-                # search outside in for closest sensors to get full data 
+                # search outside in for closest sensors to get full data
                 @_dist = @_distance(@latitude, @longitude, _record.location.latitude, _record.location.longitude)
                 if @_dist <= @_lastDistance
                   @_lastDistance = @_dist
