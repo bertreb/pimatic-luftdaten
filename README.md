@@ -1,6 +1,4 @@
 # pimatic-luftdaten
-![alt text](https://github.com/bertreb/pimatic-luftdaten/blob/master/images/nodev10.png)
-
 
 Pimatic plugin retrieves air quality sensor data from Luftdaten.info or a Luftdaten local sensor. Depending on the sensor the following information can be retrieved:
 - Particulate Matter (PM 10 and PM 2.5)
@@ -68,7 +66,7 @@ Add the device with the local IP address into the devices section:
 ```
 ### Usage
 
-The following variables are available to you in Pimatic for the LuftdatenDevice (after selection in de config!). 
+The following variables are available to you in Pimatic for the LuftdatenDevice (after selection in de config!).
 
 * ${luftdaten device id}.pm10             - Particals Matter 10 µg/m³
 * ${luftdaten device id}.pm25             - Particals Matter 2.5 µg/m³
