@@ -22,6 +22,36 @@ module.exports ={
         type: "number"
         default: 1
         required: false
+      attributes:
+        description: "Attributes which shall be exposed by the device"
+        type: "array"
+        default: [
+          {
+            name: "sensorId"
+            label: "sensor"
+          },
+          {
+            name: "pm10"
+            label: "pm10"
+          },
+          {
+            name: "pm25"
+            label: "pm25"
+          }
+        ]
+        format: "table"
+        items:
+          type: "object"
+          properties:
+            name:
+              enum: [
+                "sensorId", "distance", "pm10", "pm25",
+                "temperature", "humidity", "bar", "barSeaLevel",
+                "wifi", "noiseLevel", "noiseLeq",
+                "noiseLmin", "noiseLmax", "aqi",
+                "aqiCode", "aqiAirQuality"
+              ]
+              description: "Air quality related attributes"
       interval:
         description: "Minutes for updating data"
         type: "integer"
