@@ -1,7 +1,8 @@
 module.exports = (env) ->
   rp = require 'request-promise'
-  aqi = require './aqicalc2.js'
-  dba = require './dbacalc.js'
+  aqi = require './lib/aqicalc2.js'
+  dba = require './lib/dbacalc.js'
+  _ = env.require 'lodash'
 
   class Luftdaten extends env.plugins.Plugin
     init: (app, @framework, @config) =>
@@ -17,89 +18,88 @@ module.exports = (env) ->
       })
 
   class LuftdatenDevice extends env.devices.Device
-    attributes:
-      SENSOR_ID:
+
+    attributesTemplate:
+      sensorId:
         description: "The ID(s) of the sensor(s)"
         type: "string"
         unit: ''
         acronym: 'sensor'
-        hidden: false
-      DISTANCE:
+      distance:
         description: "The distance of the sensor in km"
         type: "number"
         unit: 'km'
         acronym: 'distance'
-        hidden: false
-      PM10:
+      pm10:
         description: "The PM10 air quality"
         type: "number"
         unit: 'ug/m3'
-        acronym: 'PM10'
-      PM25:
+        acronym: 'pm10'
+      pm25:
         description: "The PM2.5 air quality"
         type: "number"
         unit: 'ug/m3'
-        acronym: 'PM2.5'
-      TEMP:
+        acronym: 'pm2.5'
+      temperature:
         description: "The temperature"
         type: "number"
         unit: '°C'
-        acronym: 'T'
-      HUM:
+        acronym: 'temp'
+      humidity:
         description: "The humidity"
         type: "number"
         unit: '%'
-        acronym: 'H'
-      BAR:
+        acronym: 'hum'
+      bar:
         description: "The air pressure"
         type: "number"
         unit: 'hPa'
-        acronym: 'P'
-      BAR_SEA:
+        acronym: 'bar'
+      barSea:
         description: "The air pressure"
         type: "number"
         unit: 'hPa'
-        acronym: 'Psea'
-      WIFI:
+        acronym: 'barsea'
+      wifi:
         description: "The Wifi signal strength"
         type: "number"
         unit: 'dBm'
-        acronym: 'W'
-      NOISE_LEVEL:
+        acronym: 'wifi'
+      noiseLevel:
         description: "Noise level"
         type: "string"
         unit: ''
-        acronym: 'Noise level'
-      NOISE_Leq:
+        acronym: 'noiseL'
+      noiseLeq:
         description: "Noise"
         type: "number"
         unit: 'dBA'
-        acronym: 'Noise'
-      NOISE_Lmin:
+        acronym: 'noise'
+      noiseLmin:
+        description: "noiseLm"
+        type: "number"
+        unit: 'dBA'
+        acronym: 'noiseLm'
+      noiseLmax:
         description: "Noise"
         type: "number"
         unit: 'dBA'
-        acronym: 'NoiseLm'
-      NOISE_Lmax:
-        description: "Noise"
-        type: "number"
-        unit: 'dBA'
-        acronym: 'NoiseLM'
-      AQI:
+        acronym: 'noiseLM'
+      aqi:
         description: "The Air Quality Index"
         type: "number"
         unit: '/500'
-        acronym: 'AQI'
-      AQI_CODE:
+        acronym: 'aqi'
+      aqiCode:
         description: "The Air Quality Index code"
         type: "string"
         unit: ''
-        acronym: 'AQI code'
-      AQI_AIR_QUALITY:
+        acronym: 'aqiCode'
+      aqiAirQuality:
         description: "The Air Quality Description"
         type: "string"
         unit: ''
-        acronym: 'Air quality'
+        acronym: 'airQuality'
 
     constructor: (@config) ->
       @id = @config.id
@@ -110,6 +110,8 @@ module.exports = (env) ->
       @radius = if @config?.radius? or @config?.radius is ""  then @config.radius else 1
       if @sendorId is null and (@latitude is null or @longitude is null)
         throw new Error("No sensor configured")
+      
+      @attributes = _.cloneDeep(@attributes)
 
       @urlLuftdaten = "https://api.luftdaten.info/v1/sensor/#{@sensorId}/"
       @urlLuftdatenArea = "https://api.luftdaten.info/v1/filter/area=#{@latitude},#{@longitude},#{@radius}"
@@ -135,29 +137,42 @@ module.exports = (env) ->
       if not @url? then throw new Error("No valid sensorID, Lat/Lon coordinates or local IP adress")
 
       @attributeValues = {}
-      @attributeValues.PM10 = lastState?.PM10?.value or 0.0
-      @attributeValues.PM25 = lastState?.PM25?.value or 0.0
-      @attributeValues.TEMP = lastState?.TEMP?.value or 0.0
-      @attributeValues.HUM = lastState?.HUM?.value or 0.0
-      @attributeValues.BAR = lastState?.BAR?.value or 0.0
-      @attributeValues.BAR_SEA = lastState?.BAR_SEA?.value or 0.0
-      @attributeValues.WIFI = lastState?.WIFI?.value or 0
-      @attributeValues.NOISE_LEVEL = lastState?.NOISE_LEVEL?.value or ""
-      @attributeValues.NOISE_Leq = lastState?.NOISE_Leq?.value or 0.0
-      @attributeValues.NOISE_Lmin = lastState?.NOISE_Lmin?.value or 0.0
-      @attributeValues.NOISE_Lmax = lastState?.NOISE_Lmax?.value or 0.0
-      @attributeValues.AQI = lastState?.AQI?.value or 0
-      @attributeValues.AQI_CODE = lastState?.AQI_CODE?.value or 0
-      @attributeValues.AQI_AIR_QUALITY = lastState?.AQI_AIR_QUALITY?.value or 0
-      @attributeValues.DISTANCE = lastState?.DISTANCE?.value or 0
-      @attributeValues.SENSOR_ID = lastState?.SENSOR_ID?.value or 0
+      @attributeValues.pm10 = lastState?.pm10?.value or 0.0
+      @attributeValues.pm25 = lastState?.pm25?.value or 0.0
+      @attributeValues.temperature = lastState?.temperature?.value or 0.0
+      @attributeValues.humidity = lastState?.humidity?.value or 0.0
+      @attributeValues.bar = lastState?.bar?.value or 0.0
+      @attributeValues.barSea = lastState?.barSea?.value or 0.0
+      @attributeValues.wifi = lastState?.wifi?.value or 0
+      @attributeValues.noiseLevel = lastState?.noiseLevel?.value or ""
+      @attributeValues.noiseLeq = lastState?.noiseLeq?.value or 0.0
+      @attributeValues.noiseLmin = lastState?.noiseLmin?.value or 0.0
+      @attributeValues.noiseLmax = lastState?.noiseLmax?.value or 0.0
+      @attributeValues.aqi = lastState?.aqi?.value or 0
+      @attributeValues.aqiCode = lastState?.aqiCode?.value or 0
+      @attributeValues.aqiAirQuality = lastState?.aqiAirQuality?.value or 0
+      @attributeValues.distance = lastState?.distance?.value or 0
+      @attributeValues.sensorId = lastState?.sensorId?.value or 0
 
+      for attribute in @config.attributes
+        do (attribute) =>
+          @attributes[attribute.name] =
+            description: @attributesTemplate[attribute.name].description
+            type: @attributesTemplate[attribute.name].type
+            unit: if @attributesTemplate[attribute.name].unit? then @attributesTemplate[attribute.name].unit else ""
+            label: if @attributesTemplate[attribute.name].label? then @attributesTemplate[attribute.name].label else attribute.name
+            acronym: if  @attributesTemplate[attribute.name].acronym? then @attributesTemplate[attribute.name].acronym else attribute.name
+          @_createGetter attribute.name, () =>
+            return Promise.resolve @attributeValues[attribute]
+
+      ###
       for _attr of @attributes
         do (_attr) =>
           @attributes[_attr].hidden = true
           @_createGetter(_attr, =>
             return Promise.resolve @attributeValues[_attr]
           )
+      ###    
 
       @requestData()
       super()
@@ -179,22 +194,18 @@ module.exports = (env) ->
               if @sensorId isnt null
                 #check if most recent record is used
                 if new Date(_record.timestamp) >= new Date(@_luftdaten.timestamp)
-                  @attributeValues.SENSOR_ID = _record.sensor.id
-                  @attributes["SENSOR_ID"].hidden = false
+                  @attributeValues.sensorId = _record.sensor.id
                   @_luftdaten = _record
                 if @latitude isnt null and @longitude isnt null
                   @_dist = @_distance(@latitude, @longitude, _record.location.latitude, _record.location.longitude)
-                  @attributeValues.DISTANCE = @_dist
-                  @attributes["DISTANCE"].hidden = false
+                  @attributeValues.distance = @_dist
               else if @latiude isnt null and @longitude isnt null
                 # search outside in for closest sensors to get full data
                 @_dist = @_distance(@latitude, @longitude, _record.location.latitude, _record.location.longitude)
                 if @_dist <= @_lastDistance
                   @_lastDistance = @_dist
-                  @attributeValues.DISTANCE = @_dist
-                  @attributes["DISTANCE"].hidden = false
-                  @attributeValues.SENSOR_ID = _record.sensor.id
-                  @attributes["SENSOR_ID"].hidden = false
+                  @attributeValues.distance = @_dist
+                  @attributeValues.sensorId = _record.sensor.id
                   for _val in _record.sensordatavalues
                     # update data will closer values
                     if _val.value_type in @_luftdaten.sensordatavalues
@@ -216,50 +227,33 @@ module.exports = (env) ->
 
           for k, val of @_luftdaten.sensordatavalues
             if (val.value_type).match("P1")
-              @attributeValues.PM10 = Number(Math.round(val.value+'e1')+'e-1')
-              @attributes.PM10.hidden = false
-              @attributes.AQI.hidden = false
-              @attributes.AQI_CODE.hidden = false
-              @attributes.AQI_AIR_QUALITY.hidden = false
+              @attributeValues.pm10 = Number(Math.round(val.value+'e1')+'e-1')
             if (val.value_type).match("P2")
-              @attributeValues.PM25 = Number(Math.round(val.value+'e1')+ 'e-1')
-              @attributes.PM25.hidden = false
-              @attributes.AQI.hidden = false
-              @attributes.AQI_CODE.hidden = false
-              @attributes.AQI_AIR_QUALITY.hidden = false
+              @attributeValues.pm25 = Number(Math.round(val.value+'e1')+'e-1')
             if (val.value_type).match("temperature")
-              @attributeValues.TEMP = Number(Math.round(val.value+'e1')+'e-1')
-              @attributes.TEMP.hidden = false
+              @attributeValues.temperature = Number(Math.round(val.value+'e1')+'e-1')
             if (val.value_type).match("humidity")
-              @attributeValues.HUM = Number(Math.round(val.value+'e1')+'e-1')
-              @attributes.HUM.hidden = false
+              @attributeValues.humidity = Number(Math.round(val.value+'e1')+'e-1')
             if (val.value_type).match("pressure")
-              @attributeValues.BAR = Number(Math.round(val.value/100+'e1')+'e-1')
-              @attributes.BAR.hidden = false
+              @attributeValues.bar = Number(Math.round(val.value/100+'e1')+'e-1')
             if (val.value_type).match("pressure_at_sealevel")
-              @attributeValues.BAR_SEA = Number(Math.round(val.value/100+'e1')+'e-1')
-              @attributes.BAR_SEA.hidden = false
+              @attributeValues.barSea = Number(Math.round(val.value/100+'e1')+'e-1')
             if (val.value_type).match("signal")
-              @attributeValues.WIFI = Number(Math.round(val.value+'e1')+'e-1')
-              @attributes.WIFI.hidden = false
+              @attributeValues.wifi = Number(Math.round(val.value+'e1')+'e-1')
             if (val.value_type).match("noise_LAeq")
-              @attributeValues.NOISE_Leq = Number(Math.round(val.value+'e1')+'e-1')
-              @attributes.NOISE_Leq.hidden = false
-              @attributeValues.NOISE_LEVEL = dba.label(@attributeValues.NOISE_Leq)
-              @attributes.NOISE_LEVEL.hidden = false
+              @attributeValues.noiseLeq = Number(Math.round(val.value+'e1')+'e-1')
+              @attributeValues.noiseLevel = dba.label(@attributeValues.noiseLeq)
             if (val.value_type).match("noise_LA_min")
-              @attributeValues.NOISE_Lmin = Number(Math.round(val.value+'e1')+'e-1')
-              @attributes.NOISE_Lmin.hidden = false
+              @attributeValues.noiseLmin = Number(Math.round(val.value+'e1')+'e-1')
             if (val.value_type).match("noise_LA_max")
-              @attributeValues.NOISE_Lmax = Number(Math.round(val.value+'e1')+'e-1')
-              @attributes.NOISE_Lmax.hidden = false
+              @attributeValues.noiseLmax = Number(Math.round(val.value+'e1')+'e-1')
 
-          lAqi = Math.max(aqi.pm10(@attributeValues.PM10), aqi.pm25(@attributeValues.PM25))
+          lAqi = Math.max(aqi.pm10(@attributeValues.pm10), aqi.pm25(@attributeValues.pm25))
           lAqi = Math.min(lAqi, 500)
           lAqi = Math.max(lAqi, 0)
-          @attributeValues.AQI = lAqi
-          @attributeValues.AQI_CODE = aqi.aqi_color(lAqi)
-          @attributeValues.AQI_AIR_QUALITY = aqi.aqi_label(lAqi)
+          @attributeValues.aqi = lAqi
+          @attributeValues.aqiCode = aqi.aqi_color(lAqi)
+          @attributeValues.aqiAirQuality = aqi.aqi_label(lAqi)
 
           for _attr of @attributes
             @emit _attr, @attributeValues[_attr]
@@ -294,51 +288,51 @@ module.exports = (env) ->
 
   class LuftdatenHomeDevice extends env.devices.Device
     attributes:
-      PM10:
+      pm10:
         description: "The PM10 air quality"
         type: "number"
         unit: 'ug/m3'
-        acronym: 'PM10'
-      PM25:
+        acronym: 'pm10'
+      pm25:
         description: "The PM2.5 air quality"
         type: "number"
         unit: 'ug/m3'
-        acronym: 'PM2.5'
-      TEMP:
+        acronym: 'pm2.5'
+      temperature:
         description: "The temperature"
         type: "number"
         unit: '°C'
-        acronym: 'T'
-      HUM:
+        acronym: 'temp'
+      humidity:
         description: "The humidity"
         type: "number"
         unit: '%'
-        acronym: 'H'
-      BAR:
+        acronym: 'hum'
+      bar:
         description: "The air pressure"
         type: "number"
         unit: 'hPa'
-        acronym: 'P'
-      WIFI:
+        acronym: 'bar'
+      wifi:
         description: "The Wifi signal strength"
         type: "number"
         unit: 'dBm'
-        acronym: 'W'
-      AQI:
+        acronym: 'wifi'
+      aqi:
         description: "The Air Quality Index"
         type: "number"
         unit: '/500'
-        acronym: 'AQI'
-      AQI_CODE:
+        acronym: 'aqi'
+      aqiCode:
         description: "The Air Quality Index Code"
         type: "string"
         unit: ''
-        acronym: 'AQI code'
-      AQI_AIR_QUALITY:
+        acronym: 'aqiCode'
+      aqiAirQuality:
         description: "The Air Quality Description"
         type: "string"
         unit: ''
-        acronym: 'Air quality'
+        acronym: 'airQuality'
 
     constructor: (@config) ->
       @id = @config.id
@@ -360,42 +354,42 @@ module.exports = (env) ->
         .then((data) =>
           d = JSON.parse(data)
           #reset all values
-          PM10 = PM25 = TEMP = HUM = BAR = WIFI = 0
+          pm10 = pm25 = temperature = humidity = bar = wifi = 0
           for k, val of d.sensordatavalues
               if (val.value_type).match("P1")
-                PM10 = Number(Math.round(val.value+'e1')+'e-1') #PM10
+                pm10 = Number(Math.round(val.value+'e1')+'e-1') #PM10
               if (val.value_type).match("P2")
-                PM25 = Number(Math.round(val.value+'e1')+'e-1') #PM2.5
+                pm25 = Number(Math.round(val.value+'e1')+'e-1') #PM2.5
               if (val.value_type).match("temperature")
-                TEMP = Number(Math.round(val.value+'e1')+'e-1') #Temperature
+                temperature = Number(Math.round(val.value+'e1')+'e-1') #Temperature
               if (val.value_type).match("humidity")
-                HUM = Number(Math.round(val.value+'e1')+'e-1') #Humidity
+                humidity = Number(Math.round(val.value+'e1')+'e-1') #Humidity
               if (val.value_type).match("signal")
-                WIFI = Number(Math.round(val.value+'e1')+'e-1') #Signal
+                wifi = Number(Math.round(val.value+'e1')+'e-1') #Signal
               if (val.value_type).match("pressure")
-                BAR = Number(Math.round(val.value/100+'e1')+'e-1') #Pressure
+                bar = Number(Math.round(val.value/100+'e1')+'e-1') #Pressure
 
-          lAqi = Math.max(aqi.pm10(PM10), aqi.pm25(PM25))
+          lAqi = Math.max(aqi.pm10(pm10), aqi.pm25(pm25))
           lAqi = Math.min(lAqi, 500)
           lAqi = Math.max(lAqi, 0)
 
-          @_setAttribute "PM10", PM10
-          @_setAttribute "PM25", PM25
-          @_setAttribute "TEMP", TEMP
-          @_setAttribute "HUM", HUM
-          @_setAttribute "BAR", BAR
-          @_setAttribute "WIFI", WIFI
-          @_setAttribute "AQI", lAqi
-          @_setAttribute "AQI_CODE", aqi.aqi_color(lAqi)
-          @_setAttribute "AQI_AIR_QUALITY", aqi.aqi_label(lAqi)
+          @_setAttribute "pm10", pm10
+          @_setAttribute "pm25", pm25
+          @_setAttribute "temperature", temperature
+          @_setAttribute "humidity", humidity
+          @_setAttribute "bar", bar
+          @_setAttribute "wifi", wifi
+          @_setAttribute "aqi", lAqi
+          @_setAttribute "aqiCode", aqi.aqi_color(lAqi)
+          @_setAttribute "aqiAirQuality", aqi.aqi_label(lAqi)
           @_currentRequest = Promise.resolve()
         )
         .catch((err) =>
-          @_setAttribute "PM10", 0
-          @_setAttribute "PM25", 0
-          @_setAttribute "AQI", 0
-          @_setAttribute "AQI_CODE", "Unknown"
-          @_setAttribute "AQI_AIR_QUALITY", "Unknown"
+          @_setAttribute "pm10", 0
+          @_setAttribute "pm25", 0
+          @_setAttribute "aqi", 0
+          @_setAttribute "aqiCode", "Unknown"
+          @_setAttribute "aqiairQuality", "Unknown"
           #env.logger.error(err.message)
           #env.logger.debug(err.stack)
          )
@@ -409,32 +403,32 @@ module.exports = (env) ->
         @[attributeName] = value
         @emit attributeName, value
 
-    getPM10: ->
-      @_currentRequest.then(=> @PM10)
+    getPm10: ->
+      @_currentRequest.then(=> @pm10)
 
-    getPM25: ->
-      @_currentRequest.then(=> @PM25)
+    getPm25: ->
+      @_currentRequest.then(=> @pm25)
 
-    getTEMP: ->
-      @_currentRequest.then(=> @TEMP)
+    getTemperature: ->
+      @_currentRequest.then(=> @temperature)
 
-    getHUM: ->
-      @_currentRequest.then(=> @HUM)
+    getHumidity: ->
+      @_currentRequest.then(=> @humidity)
 
-    getBAR: ->
-      @_currentRequest.then(=> @BAR)
+    getBar: ->
+      @_currentRequest.then(=> @bar)
 
-    getWIFI: ->
-      @_currentRequest.then(=> @WIFI)
+    getWifi: ->
+      @_currentRequest.then(=> @wifi)
 
-    getAQI: ->
-      @_currentRequest.then(=> @AQI)
+    getAqi: ->
+      @_currentRequest.then(=> @aqi)
 
-    getAQI_CODE: ->
-      @_currentRequest.then(=> @AQI_CODE)
+    getAqiCode: ->
+      @_currentRequest.then(=> @aqiCode)
 
-    getAQI_AIR_QUALITY: ->
-      @_currentRequest.then(=> @AQI_AIR_QUALITY)
+    getAqiAirQuality: ->
+      @_currentRequest.then(=> @aqiAirQuality)
 
   plugin = new Luftdaten
   return plugin
