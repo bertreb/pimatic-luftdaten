@@ -58,7 +58,8 @@ Add the device with the local IP address into the devices section:
 ```
 ### Usage
 
-This makes the following variables available to you in Pimatic for both type of devices (LuftdatenDevice, LuftdatenHomeDevice).
+This makes the following variables available to you in Pimatic for the LuftdatenDevice. LuftdatenHomeDevice a subset if local sensor supports it (PM10, PM25, TEMP, HUM and Bar).
+
 * ${luftdaten device id}.PM10             - Particals 10 µg/m³
 * ${luftdaten device id}.PM25             - Particals 2.5 µg/m³
 * ${luftdaten device id}.TEMP             - Temperature in °C
