@@ -1,53 +1,35 @@
 //'use strict';
 
 var dba_breakpoints = [
-    [0, 10],
-    [10, 20],
+    [0, 20],
     [20, 30],
-    [30, 40],
-    [40, 50],
-    [50, 60],
-    [60, 70],
-    [70, 80],
-    [90, 100],
-    [100, 110],
-    [110, 120],
+    [30, 50],
+    [50, 70],
+    [70, 90],
+    [90, 120],
     [120, 130],
-    [130, 140]
+    [130, 150]
 ];
 
 var dba_labels = [
-    'no sound',
-    'rustling leaves',
-    'background tv studio',
-    'quit bedroom',
-    'quit library',
-    'average home',
-    'conversation',
-    'vacuum cleaner 1m',
-    'kirbside busy road',
-    'diesel truck 10m',
-    'disco 1m from speaker',
-    'chainsaw 1m',
-    'threshold of discomfort',
-    'threshold of paim',
-    'yet aircraft 50m'
+    'Silence',
+    'Faint',
+    'Soft',
+    'Moderate',
+    'Loud',
+    'Very loud',
+    'Uncomfortable',
+    'Dangerous & painful'
 ];
 var dba_colors = [
-    'Green1',
-    'Green2',
-    'Green3',
-    'Yellow1',
-    'Yellow2',
-    'Yellow3',
-    'Orange1',
-    'Orange2',
-    'Red1',
-    'Red2',
-    'Purple1',
-    'Purple2',
-    'Maroon',
-    'Black'
+    'White',
+    'Purple',
+    'Blue',
+    'Green',
+    'Yellow',
+    'Red',
+    'Brown',
+    'Maroon'
 ];
 
 if (undefined === Array.prototype.findIndex) {
