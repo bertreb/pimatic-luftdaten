@@ -8,7 +8,7 @@ Pimatic plugin retrieves air quality sensordata from Luftdaten.info or a luftdat
 - Noise Level
 
 More info at [luftdaten.info](https://luftdaten.info), where you can find instructions for building a luftdaten sensor (incl noise sensor) and how to get de Sensor ID or local IP address. The Air Quality Index (AQI) is calculated from PM10 and PM2.5 sensor data and is based on the [U.S. EPA](https://en.wikipedia.org/wiki/Air_quality_index#United_States).
-The plugin supports the Luftdaten Noise sensor. An dBa classification is added to the noise levels. 
+The plugin supports the Luftdaten Noise sensor. A dBa classification (0-140 dBa) is added to the noise level data. 
 
 The plugin enables automatically attributes when data for these attributes is received. Sometimes a refresh of the gui is needed to see the values.
 
