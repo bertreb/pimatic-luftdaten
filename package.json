@@ -8,6 +8,7 @@
     "luftdaten-config-schema.coffee",
     "device-config-schema.coffee",
     "aqicalc2.js",
+    "dbacalc.js",
     "README.md",
     "LICENSE"
   ],
