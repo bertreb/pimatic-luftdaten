@@ -5,9 +5,9 @@
 * 20190501, V0.3.0
   * Improved API handling and ready for node v8
 * 20191108, v0.4.0
-  * Luftdaten device is capable of handling Luftdaten and local sensor. In the SensorId field you can input both types of identifiers.
+  * Luftdaten device is capable of handling Luftdaten and local sensor. In the SensorId field you can input a Luftdaten sensor ID or a local IP address.
   * Attributes will become visible when data for that attribute is received
-  * Luftdaten Noise sensor added
-  * Added lat, lon, radius option to find closest sensors
+  * Luftdaten noise sensor added
+  * Added option for latitude, longitude and radius (max 50 km), to find closest sensors
   * Automatic combining of data from closest sensors to get complete dataset
-  * The LuftdatenHome device will become obsolete.
+  * The LuftdatenHome device is becoming obsolete and will be removed in a next release.
