@@ -8,7 +8,7 @@ Pimatic plugin retrieves air quality sensordata from Luftdaten.info or a luftdat
 - Noise Level
 
 More info at [luftdaten.info](https://luftdaten.info), where you can find instructions for building a luftdaten sensor (incl noise sensor) and how to get de Sensor ID or local IP address. The Air Quality Index (AQI) is calculated from PM10 and PM2.5 sensor data and is based on the [U.S. EPA](https://en.wikipedia.org/wiki/Air_quality_index#United_States).
-The plugin supports the Luftdaten noise sensor. A dBa classification (0-140 dBa) is added to the noise level data. 
+The plugin supports the Luftdaten noise sensor. A dBa classification (0-140 dBa) is added to the noise level data.
 
 The plugin enables automatically attributes when data for these attributes is received. Sometimes a refresh of the gui is needed to see the values.
 
@@ -35,14 +35,14 @@ Add the device to the devices section:
       "id": "luftdaten",
       "class": "LuftdatenDevice",
       "name": "Device for retrieving data from Luftdaten server",
-      "sensorId": "Luftdaten ID of the required sensor",
+      "sensorId": "Luftdaten sensor ID or local IP address of sensor",
       "latitude": latitude coordinate of the location you want info for,
       "longitude": longitude coordinate of the location you want info for,
-      "radius": the radius in km within for the closest sensor is searched, default 1 km,
+      "radius": the radius of the cel for searching the closest sensor, default 1 km,
       "minutes": 60, time between updates
     }
 ```
-You need to configure a sensorId or a latitude/longitude/range combination. If you use de lat/lon option, make sure the range is not to narrow (no sensors) or to broad. Too many sensors in a too broad area. The device will automaticly search for the closest sensors to get a complete data set. In the debug mode you can the number sensor within the specified range. Try to get the number of sensors back to 1 by reducing the range.
+You need to configure a sensorId or a latitude/longitude/range combination. If you use de lat/lon option, make sure the range is not to narrow (no sensors). The radius is maximized to 50 km. The device will automatically search for the closest sensors to get a complete data set.
 
 * Luftdaten Home Device.
 
@@ -61,18 +61,19 @@ Add the device with the local IP address into the devices section:
 
 This makes the following variables available to you in Pimatic for the LuftdatenDevice. LuftdatenHomeDevice a subset if local sensor supports it (PM10, PM25, TEMP, HUM and Bar).
 
-* ${luftdaten device id}.PM10             - Particals 10 µg/m³
-* ${luftdaten device id}.PM25             - Particals 2.5 µg/m³
+* ${luftdaten device id}.PM10             - Particals Matter 10 µg/m³
+* ${luftdaten device id}.PM25             - Particals Matter 2.5 µg/m³
 * ${luftdaten device id}.TEMP             - Temperature in °C
 * ${luftdaten device id}.HUM              - Humidity in %
 * ${luftdaten device id}.BAR              - Pressure at the altitude of the sensor in hPa
 * ${luftdaten device id}.BAR_SEA_LEVEL    - Pressure at sea level in hPa
 * ${luftdaten device id}.WIFI             - Wifi signal strength in dBm
+* ${luftdaten device id}.NOISE_LEVEL      - Current noise level classification
 * ${luftdaten device id}.NOISE_Leq        - Current noise level (average per 2.5 minutes) in dBa
 * ${luftdaten device id}.NOISE_Lmin       - Lowest noise level in dBa
 * ${luftdaten device id}.NOISE_Lmax       - Highest noise level in dBa
 * ${luftdaten device id}.AQI              - index between 0 (very good) and 500 (very bad) air quality
-* ${luftdaten device id}.AQI_CODE         - color code of airquality (green - purple)
+* ${luftdaten device id}.AQI_CODE         - color code of air quality (green - purple)
 * ${luftdaten device id}.AIR_AIR_QUALITY  - textual info on air quality level
 * ${luftdaten device id}.SENSOR_ID        - Luftdaten ID of the sensor
 * ${luftdaten device id}.DISTANCE         - Distance to the sensor (km)
