@@ -11,3 +11,5 @@
   * Automatic combining of data from closest sensors to get complete dataset
   * Attributes to be shown in the gui, can be selected in the device config
   * The LuftdatenHome device is becoming obsolete and will be removed in a next release.
+* 20191109, v0.4.1
+  * Changed attribute names back to smane names as in previsous version (compatibility)

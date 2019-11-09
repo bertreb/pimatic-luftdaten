@@ -40,11 +40,11 @@ Add the device to the devices section:
       "longitude": longitude coordinate of the location you want info for,
       "radius": the radius of the cel for searching the closest sensor, default 1 km,
       "attributes": [
-        "sensorId", "distance", "pm10", "pm25",
-        "temperature", "humidity", "bar", "barSeaLevel",
-        "wifi", "noiseLevel", "noiseLeq",
-        "noiseLmin", "noiseLmax", "aqi",
-        "aqiCode", "aqiAirQuality"
+         "SENSOR_ID", "DISTANCE", "PM10", "PM25",
+          "TEMP", "HUM", "BAR", "BAR_SEA",
+          "WIFI", "NOISE_LEVEL", "NOISE_LEQ",
+          "NOISE_LMIN", "NOISE_LMAX", "AQI",
+          "AQI_CODE", "AQI_AIR_QUALITY"
         ] // this is the maximum set of attributes
       "minutes": 60, time between updates
     }
@@ -53,7 +53,7 @@ You need to configure a Luftdaten SensorId or a latitude/longitude/range combina
 
 * Luftdaten Home Device.
 
-Gets pm10, pm2.5, humidity, temperature and bar data from a local Luftdaten sensor. The Air Quality Index (AQI) data is calculated from that.
+Gets PM10, PM2.5, HUMidity, TEMPerature and BAR data from a local Luftdaten sensor. The Air Quality Index (AQI) data is calculated from that.
 Add the device with the local IP address into the devices section:
 ```    
     {
@@ -68,25 +68,24 @@ Add the device with the local IP address into the devices section:
 
 The following variables are available to you in Pimatic for the LuftdatenDevice (after selection in de config!).
 
-* ${luftdaten device id}.pm10             - Particals Matter 10 µg/m³
-* ${luftdaten device id}.pm25             - Particals Matter 2.5 µg/m³
-* ${luftdaten device id}.temperature      - Temperature in °C
-* ${luftdaten device id}.humidity         - Humidity in %
-* ${luftdaten device id}.bar              - Pressure at the altitude of the sensor in hPa
-* ${luftdaten device id}.bar              - Pressure at sea level in hPa
-* ${luftdaten device id}.wifi             - Wifi signal strength in dBm
-* ${luftdaten device id}.noiseLevel       - Current noise level classification
-* ${luftdaten device id}.noiseLeq         - Current noise level (average per 2.5 minutes) in dBa
-* ${luftdaten device id}.noieLmin         - Lowest noise level in dBa
-* ${luftdaten device id}.noiseLmax        - Highest noise level in dBa
-* ${luftdaten device id}.aqi              - index between 0 (very good) and 500 (very bad) air quality
-* ${luftdaten device id}.aqiCode          - color code of air quality (green - purple)
-* ${luftdaten device id}.aqiAirQuality    - textual info on air quality level
-* ${luftdaten device id}.sensorId         - Luftdaten ID of the sensor
-* ${luftdaten device id}.distance         - Distance to the sensor (km)
+* ${luftdaten device id}.PM10             - Particals Matter 10 µg/m³
+* ${luftdaten device id}.PM25             - Particals Matter 2.5 µg/m³
+* ${luftdaten device id}.TEMP             - Temperature in °C
+* ${luftdaten device id}.HUM              - Humidity in %
+* ${luftdaten device id}.BAR              - Pressure at the altitude of the sensor in hPa
+* ${luftdaten device id}.BAR_SEA              - Pressure at sea level in hPa
+* ${luftdaten device id}.WIFI             - Wifi signal strength in dBm
+* ${luftdaten device id}.NOISE_LEVEL      - Current noise level classification
+* ${luftdaten device id}.NOISE_LEQ        - Current noise level (average per 2.5 minutes) in dBa
+* ${luftdaten device id}.NOISE_LMIN       - Lowest noise level in dBa
+* ${luftdaten device id}.NOISE_LMAX       - Highest noise level in dBa
+* ${luftdaten device id}.AQI              - index between 0 (very good) and 500 (very bad) air quality
+* ${luftdaten device id}.AQI_CODE         - color code of air quality (green - purple)
+* ${luftdaten device id}.AQI_AIR_QUALITY  - textual info on air quality level
+* ${luftdaten device id}.SENSOR_ID        - Luftdaten ID of the sensor
+* ${luftdaten device id}.DISTANCE         - Distance to the sensor (km)
 
-The LuftdatenHome Device provides a subset of this data determined by the capabilities of the local sensor. The maximum supported attributes are: pm10, pm25, temperature, humidity and bar.
-
+The LuftdatenHome Device provides a subset of this data determined by the capabilities of the local sensor. 
 
 In the gui an attribute becomes visible when added in the device config.
 

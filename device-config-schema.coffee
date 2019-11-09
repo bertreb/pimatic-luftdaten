@@ -27,16 +27,13 @@ module.exports ={
         type: "array"
         default: [
           {
-            name: "sensorId"
-            label: "sensor"
+            name: "SENSOR_ID"
           },
           {
-            name: "pm10"
-            label: "pm10"
+            name: "PM10"
           },
           {
-            name: "pm25"
-            label: "pm25"
+            name: "PM25"
           }
         ]
         format: "table"
@@ -45,11 +42,11 @@ module.exports ={
           properties:
             name:
               enum: [
-                "sensorId", "distance", "pm10", "pm25",
-                "temperature", "humidity", "bar", "barSeaLevel",
-                "wifi", "noiseLevel", "noiseLeq",
-                "noiseLmin", "noiseLmax", "aqi",
-                "aqiCode", "aqiAirQuality"
+                "SENSOR_ID", "DISTANCE", "PM10", "PM25",
+                "TEMP", "HUM", "BAR", "BAR_SEA",
+                "WIFI", "NOISE_LEVEL", "NOISE_LEQ",
+                "NOISE_LMIN", "NOISE_LMAX", "AQI",
+                "AQI_CODE", "AQI_AIR_QUALITY"
               ]
               description: "Air quality related attributes"
       interval:
