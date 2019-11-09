@@ -1,5 +1,5 @@
 # pimatic-luftdaten
-<div style="text-align: right">![alt text](https://github.com/bertreb/pimatic-luftdaten/blob/master/images/nodev10.png) </div>
+![alt text](https://github.com/bertreb/pimatic-luftdaten/blob/master/images/nodev10.png)
 
 
 Pimatic plugin retrieves air quality sensor data from Luftdaten.info or a Luftdaten local sensor. Depending on the sensor the following information can be retrieved:
