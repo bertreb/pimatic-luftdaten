@@ -1,6 +1,6 @@
 # pimatic-luftdaten
 
-Pimatic plugin retrieves air quality sensordata from Luftdaten.info or a luftdaten local sensor. Depending on the sensor the following information can be retrieved:
+Pimatic plugin retrieves air quality sensor data from Luftdaten.info or a Luftdaten local sensor. Depending on the sensor the following information can be retrieved:
 - Particulate Matter (PM 10 and PM 2.5)
 - Temperature
 - Humidity
@@ -8,9 +8,9 @@ Pimatic plugin retrieves air quality sensordata from Luftdaten.info or a luftdat
 - Noise Level
 
 More info at [luftdaten.info](https://luftdaten.info), where you can find instructions for building a luftdaten sensor (incl noise sensor) and how to get de Sensor ID or local IP address. The Air Quality Index (AQI) is calculated from PM10 and PM2.5 sensor data and is based on the [U.S. EPA](https://en.wikipedia.org/wiki/Air_quality_index#United_States).
-The plugin supports the Luftdaten noise sensor. A dBa classification (0-140 dBa) is added to the noise level data.
+The plugin supports also the Luftdaten noise sensor. In the gui a dBa classification (0-140 dBa) is added to the noise level data.
 
-The plugin enables automatically attributes when data for these attributes is received. Sometimes a refresh of the gui is needed to see the values.
+The plugin enables automatically attributes when data for an attribute  is received. Sometimes a refresh of the gui is needed to see the values.
 
 For the plugin no API key is required, it uses the open lufdaten.info API or the local sensor API.
 
@@ -42,7 +42,7 @@ Add the device to the devices section:
       "minutes": 60, time between updates
     }
 ```
-You need to configure a sensorId or a latitude/longitude/range combination. If you use de lat/lon option, make sure the range is not to narrow (no sensors). The radius is maximized to 50 km. The device will automatically search for the closest sensors to get a complete data set.
+You need to configure a Luftdaten SensorId or a latitude/longitude/range combination. If you use de lat/lon option, make sure the range is not to narrow (= no sensors). The maximum radius is 50 km. The device will automatically search for the closest sensors to get a complete data set.
 
 * Luftdaten Home Device.
 
@@ -79,7 +79,7 @@ This makes the following variables available to you in Pimatic for the Luftdaten
 * ${luftdaten device id}.DISTANCE         - Distance to the sensor (km)
 
 
-In the gui an attribute is not visible when no value is received. The variable is set to 0 is no value is received.
+In the gui an attribute is not visible when no value is received.
 
 ---------
 
