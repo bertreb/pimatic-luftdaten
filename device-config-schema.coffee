@@ -6,7 +6,7 @@ module.exports ={
     extensions: ["xLink", "xAttributeOptions"]
     properties:
       sensorId:
-        description: "Sensor ID of Luftdaten sensor"
+        description: "Luftdaten sensor ID or local IP address of Luftdaten sensor"
         type: "string"
         required: false
       latitude:
