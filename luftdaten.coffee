@@ -8,11 +8,11 @@ module.exports = (env) ->
 
       @framework.deviceManager.registerDeviceClass("LuftdatenDevice", {
         configDef: deviceConfigDef.LuftdatenDevice,
-        createCallback: (config) => new LuftdatenDevice(config)
+        createCallback: (config) -> new LuftdatenDevice(config)
       })
       @framework.deviceManager.registerDeviceClass("LuftdatenHomeDevice", {
         configDef: deviceConfigDef.LuftdatenHomeDevice,
-        createCallback: (config) => new LuftdatenHomeDevice(config)
+        createCallback: (config) -> new LuftdatenHomeDevice(config)
       })
 
   class LuftdatenDevice extends env.devices.Device
@@ -98,11 +98,11 @@ module.exports = (env) ->
     constructor: (@config) ->
       @id = @config.id
       @name = @config.name
-      @sensorId = if @config?.sensorId? or @config?.sensorID is "" then @config.sensorId else null
-      @latitude = if @config?.latitude? or @config?.latitude is "" then @config.latitude else null
-      @longitude = if @config?.longitude? or @config?.longitude is "" then @config.longitude else null
+      @sensorId = if @config?.sensorId? and @config?.sensorId isnt "" then @config.sensorId else null
+      @latitude = if @config?.latitude?  and @config?.latitude isnt "" then @config.latitude else null
+      @longitude = if @config?.longitude?  and @config?.longitude isnt "" then @config.longitude else null
       @radius = if @config?.radius? or @config?.radius is ""  then @config.radius else 1
-      if @sendorId is 0 and (@latitude is 0 or @longitude is 0)
+      if @sendorId is null and (@latitude is null or @longitude is null)
         throw new Error("No sensor configured")
 
       @urlLuftdaten = "https://api.luftdaten.info/v1/sensor/#{@sensorId}/"
@@ -121,10 +121,10 @@ module.exports = (env) ->
               "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$")
             @url = @urlLocal
       else if @latitude? and @longitude?
-        @url = @urlLuftdatenArea     
+        @url = @urlLuftdatenArea
 
       if not @url? then throw new Error("No valid sensorID, Lat/Lon coordinates or local IP adress")
-      
+
       @attributeValues = {}
       @attributeValues.PM10 = lastState?.PM10?.value or 0.0
       @attributeValues.PM25 = lastState?.PM25?.value or 0.0
@@ -162,13 +162,22 @@ module.exports = (env) ->
         .then((data) =>
           d = JSON.parse(data)
           @_luftdaten = {}
-          @_sensors = []
-          @_usedSensors = ""
           if Array.isArray(d)
             @_luftdaten = d[0]
             @_lastDistance = 10000
             for _record in d
-              if @latiude isnt null and @longitude isnt null
+              if @sensorId isnt null
+                #check if most recent record is used
+                if new Date(_record.timestamp) >= new Date(@_luftdaten.timestamp)
+                  @attributeValues.SENSOR_ID = _record.sensor.id
+                  @attributes["SENSOR_ID"].hidden = false
+                  @_luftdaten = _record
+                if @latitude isnt null and @longitude isnt null
+                  @_dist = @_distance(@latitude, @longitude, _record.location.latitude, _record.location.longitude)
+                  @attributeValues.DISTANCE = @_dist
+                  @attributes["DISTANCE"].hidden = false
+              else if @latiude isnt null and @longitude isnt null
+                # search outside in for closest sensors to get full data 
                 @_dist = @_distance(@latitude, @longitude, _record.location.latitude, _record.location.longitude)
                 if @_dist <= @_lastDistance
                   @_lastDistance = @_dist
@@ -180,26 +189,21 @@ module.exports = (env) ->
                     # update data will closer values
                     if _val.value_type in @_luftdaten.sensordatavalues
                       @_luftdaten.sensordatavalues[_val.value_type].value = String _record.sensordatavalues[_val.value_type].value
-                    #add missing values               
+                    #add missing values
                     unless @_luftdaten.sensordatavalues[_val.value_type]?
                       env.logger.debug _val.value_type + " added to @_luftdaten.sensordatavalues "
                       @_luftdaten.sensordatavalues[_val.value_type] =
                         value_type: _val.value_type
                         value: String _val.value
-                        id: _val.id 
-              else if @sensorId?
-                @attributeValues.SENSOR_ID = _record.sensor.id
-                @attributes["SENSOR_ID"].hidden = false
-                # ...
-                          
-              @_sensors.push _record.sensor.id unless _record.sensor.id in @_sensors
+                        id: _val.id
           else
             @_luftdaten = d
 
           if not @_luftdaten?
             env.logger.debug "no data from " + @url
             return
-          
+          # test
+
           for k, val of @_luftdaten.sensordatavalues
             if (val.value_type).match("P1")
               @attributeValues.PM10 = Number(Math.round(val.value+'e1')+'e-1')
@@ -208,7 +212,7 @@ module.exports = (env) ->
               @attributes.AQI_CODE.hidden = false
               @attributes.AQI_AIR_QUALITY.hidden = false
             if (val.value_type).match("P2")
-              @attributeValues.PM25 = Number(Math.round(val.value+'e1')+'e-1')
+              @attributeValues.PM25 = Number(Math.round(val.value+'e1')+ 'e-1')
               @attributes.PM25.hidden = false
               @attributes.AQI.hidden = false
               @attributes.AQI_CODE.hidden = false
@@ -237,17 +241,17 @@ module.exports = (env) ->
             if (val.value_type).match("noise_LA_max")
               @attributeValues.NOISE_Lmax = Number(Math.round(val.value+'e1')+'e-1')
               @attributes.NOISE_Lmax.hidden = false
-          
+
           lAqi = Math.max(aqi.pm10(@attributeValues.PM10), aqi.pm25(@attributeValues.PM25))
           lAqi = Math.min(lAqi, 500)
           lAqi = Math.max(lAqi, 0)
           @attributeValues.AQI = lAqi
           @attributeValues.AQI_CODE = aqi.aqi_color(lAqi)
-          @attributeValues.AQI_AIR_QUALITY = aqi.aqi_label(lAqi) 
-          
+          @attributeValues.AQI_AIR_QUALITY = aqi.aqi_label(lAqi)
+
           for _attr of @attributes
             @emit _attr, @attributeValues[_attr]
-          @_currentRequest = Promise.resolve()       
+          @_currentRequest = Promise.resolve()
         )
         .catch((err) =>
           for _attr of @attributes
@@ -330,7 +334,7 @@ module.exports = (env) ->
       @sensorIp = @config.sensorIp
       @url = "http://#{@sensorIp}/data.json"
       @timeout = @config.interval * 60000 # Check for changes every interval in minutes
- 
+
       super()
       @requestData()
 
@@ -370,12 +374,12 @@ module.exports = (env) ->
           @_setAttribute "BAR", BAR
           @_setAttribute "WIFI", WIFI
           @_setAttribute "AQI", lAqi
-          @_setAttribute "AQI_CODE", aqi.aqi_color(lAqi)          
-          @_setAttribute "AQI_AIR_QUALITY", aqi.aqi_label(lAqi)          
+          @_setAttribute "AQI_CODE", aqi.aqi_color(lAqi)
+          @_setAttribute "AQI_AIR_QUALITY", aqi.aqi_label(lAqi)
           @_currentRequest = Promise.resolve()
         )
         .catch((err) =>
-          @_setAttribute "PM10", 0 
+          @_setAttribute "PM10", 0
           @_setAttribute "PM25", 0
           @_setAttribute "AQI", 0
           @_setAttribute "AQI_CODE", "Unknown"
@@ -395,7 +399,7 @@ module.exports = (env) ->
 
     getPM10: ->
       @_currentRequest.then(=> @PM10)
-      
+
     getPM25: ->
       @_currentRequest.then(=> @PM25)
 
