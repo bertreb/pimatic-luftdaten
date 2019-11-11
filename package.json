@@ -1,14 +1,13 @@
 {
   "name": "pimatic-luftdaten",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Pimatic plugin for luftdaten sensors",
   "main": "luftdaten",
   "files": [
     "luftdaten.coffee",
     "luftdaten-config-schema.coffee",
     "device-config-schema.coffee",
-    "lib/aqicalc2.js",
-    "lib/dbacalc.js",
+    "lib/calc.js",
     "README.md",
     "LICENSE"
   ],

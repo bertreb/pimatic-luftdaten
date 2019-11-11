@@ -73,7 +73,7 @@ The following variables are available to you in Pimatic for the LuftdatenDevice 
 * ${luftdaten device id}.TEMP             - Temperature in °C
 * ${luftdaten device id}.HUM              - Humidity in %
 * ${luftdaten device id}.BAR              - Pressure at the altitude of the sensor in hPa
-* ${luftdaten device id}.BAR_SEA              - Pressure at sea level in hPa
+* ${luftdaten device id}.BAR_SEA          - Pressure at sea level in hPa
 * ${luftdaten device id}.WIFI             - Wifi signal strength in dBm
 * ${luftdaten device id}.NOISE_LEVEL      - Current noise level classification
 * ${luftdaten device id}.NOISE_LEQ        - Current noise level (average per 2.5 minutes) in dBa
@@ -85,7 +85,7 @@ The following variables are available to you in Pimatic for the LuftdatenDevice 
 * ${luftdaten device id}.SENSOR_ID        - Luftdaten ID of the sensor
 * ${luftdaten device id}.DISTANCE         - Distance to the sensor (km)
 
-The LuftdatenHome Device provides a subset of this data determined by the capabilities of the local sensor. 
+The LuftdatenHome Device provides a subset of this data determined by the capabilities of the local sensor.
 
 In the gui an attribute becomes visible when added in the device config.
 

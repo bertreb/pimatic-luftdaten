@@ -112,6 +112,14 @@ module.exports = (env) ->
         throw new Error("No sensor configured")
       
       @attributes = _.cloneDeep(@attributes)
+      @usedSensors = {}
+      @sensorId = if @sensorId? then @sensorId.replace(/\s+/g,'')
+      @_requestTypes = 
+        single: 1
+        multi: 2
+        area: 3
+        local: 4
+      @requestType = null
 
       @urlLuftdaten = "https://api.luftdaten.info/v1/sensor/#{@sensorId}/"
       @urlLuftdatenArea = "https://api.luftdaten.info/v1/filter/area=#{@latitude},#{@longitude},#{@radius}"
@@ -120,21 +128,25 @@ module.exports = (env) ->
       @timeout = @config.interval * 60000 # Check for changes every interval in minutes
       @maxDistance = 50 # km
       if @radius > @maxDistance
+        @radius = @maxDistance
         env.logger.info "Radius is too large and is set to maximum = " + @maxDistance + " km"
 
       if @sensorId?
         if Number.isInteger(Number @sensorId)
           @url = @urlLuftdaten
+          @requestType = @_requestTypes.single
         else if @sensorId.match(
               "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
               "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
               "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
               "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$")
             @url = @urlLocal
+            @requestType = @_requestTypes.local
       else if @latitude? and @longitude?
         @url = @urlLuftdatenArea
+        @requestType = @_requestTypes.area
 
-      if not @url? then throw new Error("No valid sensorID, Lat/Lon coordinates or local IP adress")
+      if not @url? then throw new Error("Not a valid sensorID, Lat/Lon coordinates or local IP adress")
 
       @attributeValues = {}
       @attributeValues.PM10 = lastState?.PM10?.value or 0.0
@@ -182,27 +194,35 @@ module.exports = (env) ->
             @_luftdaten = d[0]
             @_lastDistance = Math.min(@radius, @maxDistance)
             for _record in d
-              if @sensorId isnt null
+              if @requestType is @_requestTypes.single # or @requestType is @_requestTypes.multi#@sensorId?
                 #check if most recent record is used
+                for _values in _record.sensordatavalues
+                  @usedSensors[_values.value_type] =
+                    value_type: _values.value_type
+                    id: _record.sensor.id
+                  #check if most recent record is used
                 if new Date(_record.timestamp) >= new Date(@_luftdaten.timestamp)
                   @attributeValues.SENSOR_ID = _record.sensor.id
                   @_luftdaten = _record
-                if @latitude isnt null and @longitude isnt null
+                if @requestType is @_requestTypes.area #@latitude isnt null and @longitude isnt null
                   @_dist = @_distance(@latitude, @longitude, _record.location.latitude, _record.location.longitude)
                   @attributeValues.DISTANCE = @_dist
-              else if @latiude isnt null and @longitude isnt null
+              else if @requestType is @_requestTypes.area #@latiude isnt null and @longitude isnt null
                 # search outside in for closest sensors to get full data
                 @_dist = @_distance(@latitude, @longitude, _record.location.latitude, _record.location.longitude)
                 if @_dist <= @_lastDistance
                   @_lastDistance = @_dist
                   @attributeValues.DISTANCE = @_dist
-                  @attributeValues.SENSOR_ID = _record.sensor.id
                   for _val in _record.sensordatavalues
                     # update data will closer values
+                    @usedSensors[_val.value_type] =
+                      value_type: _val.value_type
+                      id: _record.sensor.id
                     if _val.value_type in @_luftdaten.sensordatavalues
+                      #update value of existing value_type
                       @_luftdaten.sensordatavalues[_val.value_type].value = String _record.sensordatavalues[_val.value_type].value
-                    #add missing values
-                    unless @_luftdaten.sensordatavalues[_val.value_type]?
+                    else 
+                      #add closer missing value_type, value and id
                       env.logger.debug _val.value_type + " added to sensor data, sensorID: " + _record.sensor.id
                       @_luftdaten.sensordatavalues[_val.value_type] =
                         value_type: _val.value_type
@@ -211,11 +231,16 @@ module.exports = (env) ->
           else
             @_luftdaten = d
 
+          @sensorList = []
+          for sensor, val of @usedSensors
+            unless val.id in @sensorList
+              @sensorList.push val.id
+          @attributeValues.SENSOR_ID = @sensorList
+
           if not @_luftdaten?
             env.logger.debug "no data from " + @url
             return
-          # test
-
+ 
           for k, val of @_luftdaten.sensordatavalues
             if (val.value_type).match("P1")
               @attributeValues.PM10 = Number(Math.round(val.value+'e1')+'e-1')
@@ -254,6 +279,7 @@ module.exports = (env) ->
           for _attr of @attributes
             @attributeValues[_attr] = 0
             @emit _attr, @attributeValues[_attr]
+          @emit "SENSOR_ID", "Luftdaten offline"
           env.logger.error(err.message)
         )
 
