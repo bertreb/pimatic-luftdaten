@@ -1,7 +1,6 @@
 module.exports = (env) ->
   rp = require 'request-promise'
-  aqi = require './lib/aqicalc2.js'
-  dba = require './lib/dbacalc.js'
+  calc = require './lib/calc.js'
   _ = env.require 'lodash'
 
   class Luftdaten extends env.plugins.Plugin
@@ -258,18 +257,18 @@ module.exports = (env) ->
               @attributeValues.WIFI = Number(Math.round(val.value+'e1')+'e-1')
             if (val.value_type).match("noise_LAeq")
               @attributeValues.NOISE_LEQ = Number(Math.round(val.value+'e1')+'e-1')
-              @attributeValues.NOISE_LEVEL = dba.label(@attributeValues.NOISE_LEQ)
+              @attributeValues.NOISE_LEVEL = calc.dba_label(@attributeValues.NOISE_LEQ)
             if (val.value_type).match("noise_LA_min")
               @attributeValues.NOISE_LMIN = Number(Math.round(val.value+'e1')+'e-1')
             if (val.value_type).match("noise_LA_max")
               @attributeValues.NOISE_LMAX = Number(Math.round(val.value+'e1')+'e-1')
 
-          lAqi = Math.max(aqi.pm10(@attributeValues.PM10), aqi.pm25(@attributeValues.PM25))
+          lAqi = Math.max(calc.pm10(@attributeValues.PM10), calc.pm25(@attributeValues.PM25))
           lAqi = Math.min(lAqi, 500)
           lAqi = Math.max(lAqi, 0)
           @attributeValues.AQI = lAqi
-          @attributeValues.AQI_CODE = aqi.aqi_color(lAqi)
-          @attributeValues.AQI_AIR_QUALITY = aqi.aqi_label(lAqi)
+          @attributeValues.AQI_CODE = calc.aqi_color(lAqi)
+          @attributeValues.AQI_AIR_QUALITY = calc.aqi_label(lAqi)
 
           for _attr of @attributes
             @emit _attr, @attributeValues[_attr]
@@ -386,7 +385,7 @@ module.exports = (env) ->
               if (val.value_type).match("pressure")
                 BAR = Number(Math.round(val.value/100+'e1')+'e-1') #Pressure
 
-          lAqi = Math.max(aqi.pm10(PM10), aqi.pm25(PM25))
+          lAqi = Math.max(calc.pm10(PM10), calc.pm25(PM25))
           lAqi = Math.min(lAqi, 500)
           lAqi = Math.max(lAqi, 0)
 
@@ -397,8 +396,8 @@ module.exports = (env) ->
           @_setAttribute "BAR", BAR
           @_setAttribute "WIFI", WIFI
           @_setAttribute "AQI", lAqi
-          @_setAttribute "AQI_CODE", aqi.aqi_color(lAqi)
-          @_setAttribute "AQI_AIR_QUALITY", aqi.aqi_label(lAqi)
+          @_setAttribute "AQI_CODE", calc.aqi_color(lAqi)
+          @_setAttribute "AQI_AIR_QUALITY", calc.aqi_label(lAqi)
           @_currentRequest = Promise.resolve()
         )
         .catch((err) =>

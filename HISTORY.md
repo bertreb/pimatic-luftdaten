@@ -16,3 +16,5 @@
 * 20191111, v0.4.2
   * Integrated support files for AQI and DBA calculations
   * All the used sensorId's are now showing in the Gui
+* 20191111, v0.4.3
+  * bugfix support lib
