@@ -53,7 +53,7 @@ You need to configure a Luftdaten SensorId or a latitude/longitude/range combina
 
 * Luftdaten Home Device.
 
-Gets PM10, PM2.5, HUMidity, TEMPerature and BAR data from a local Luftdaten sensor. The Air Quality Index (AQI) data is calculated from that. The Luftdaten device is capable of handling all types of network (Luftdaten cloud and local IP sensor). The Luftdaten Home Device will therefore be removed from the plugin in one of the following versions.
+Gets PM10, PM2.5, HUMidity, TEMPerature and BAR data from a local Luftdaten sensor. The Air Quality Index (AQI) data is calculated from that. The Luftdaten device is capable of handling all types of network (Luftdaten cloud and local IP sensor). The Luftdaten Home Device will therefore be removed from the plugin in one of the next versions.
 
 Add the device with the local IP address into the devices section:
 ```    
