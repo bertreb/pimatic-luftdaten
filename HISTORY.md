@@ -12,7 +12,7 @@
   * Attributes to be shown in the gui, can be selected in the device config
   * The LuftdatenHome device is becoming obsolete and will be removed in a next release.
 * 20191109, v0.4.1
-  * Changed attribute names back to smane names as in previsous version (compatibility)
+  * Changed attribute names back to same names as in previous version (compatibility)
 * 20191111, v0.4.2
   * Integrated support files for AQI and DBA calculations
   * All the used sensorId's are now showing in the Gui
