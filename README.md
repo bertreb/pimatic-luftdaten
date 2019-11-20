@@ -49,11 +49,12 @@ Add the device to the devices section:
       "minutes": 60, time between updates
     }
 ```
-You need to configure a Luftdaten SensorId or a latitude/longitude/range combination. If you use de lat/lon option, make sure the range is not to narrow (= no sensors). The maximum radius is 50 km. The device will automatically search for the closest sensors to get a complete data set. In the gui an attribute becomes visible when added in the device config.
+You need to configure a Luftdaten SensorId or a latitude/longitude/range combination. If you specify all, the SensorId will be used. If you use de lat/lon option, make sure the range is not to narrow (= no sensors). The maximum radius is 50 km. The device will automatically search for the closest sensors to get a complete data set. In the gui an attribute becomes visible when added in the device config.
 
 * Luftdaten Home Device.
 
-Gets PM10, PM2.5, HUMidity, TEMPerature and BAR data from a local Luftdaten sensor. The Air Quality Index (AQI) data is calculated from that.
+Gets PM10, PM2.5, HUMidity, TEMPerature and BAR data from a local Luftdaten sensor. The Air Quality Index (AQI) data is calculated from that. The Luftdaten device is capable of handling all types of network (Luftdaten cloud and local IP sensor). The Luftdaten Home Device will therefore be removed from the plugin in one of the following versions.
+
 Add the device with the local IP address into the devices section:
 ```    
     {
