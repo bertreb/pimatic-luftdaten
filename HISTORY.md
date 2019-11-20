@@ -10,7 +10,7 @@
   * Added option for latitude, longitude and radius (max 50 km), to find closest sensors
   * Automatic combining of data from closest sensors to get complete dataset
   * Attributes to be shown in the gui, can be selected in the device config
-  * The LuftdatenHome device is becoming obsolete and will be removed in a next release.
+  * The Luftdaten Home device is becoming obsolete and will be removed in a next release.
 * 20191109, v0.4.1
   * Changed attribute names back to same names as in previous version (compatibility)
 * 20191111, v0.4.2
@@ -18,3 +18,5 @@
   * All the used sensorId's are now showing in the Gui
 * 20191111, v0.4.3
   * bugfix support lib
+* 20191120, v0.4.4
+  * edit readme.md
