@@ -20,3 +20,5 @@
   * bugfix support lib
 * 20191120, v0.4.4
   * edit readme.md
+* 20191122, v0.4.5
+  * better handling of ETIMEDOUT error. After 5 consecutive ETIMEDOUT error's, an error message and reset of values.

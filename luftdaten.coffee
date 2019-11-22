@@ -107,6 +107,7 @@ module.exports = (env) ->
       @latitude = if @config?.latitude?  and @config?.latitude isnt "" then @config.latitude else null
       @longitude = if @config?.longitude?  and @config?.longitude isnt "" then @config.longitude else null
       @radius = if @config?.radius? or @config?.radius is ""  then @config.radius else 1
+      @connErrs = 0
       if @sendorId is null and (@latitude is null or @longitude is null)
         throw new Error("No sensor configured")
       
@@ -273,13 +274,17 @@ module.exports = (env) ->
           for _attr of @attributes
             @emit _attr, @attributeValues[_attr]
           @_currentRequest = Promise.resolve()
+          @connErrs = 0
         )
         .catch((err) =>
-          for _attr of @attributes
-            @attributeValues[_attr] = 0
-            @emit _attr, @attributeValues[_attr]
-          @emit "SENSOR_ID", "Luftdaten offline"
-          env.logger.error(err.message)
+          if err.indexOff('ETIMEDOUT') >= 0
+            env.logger.error("Luftdaten is not responding")
+            @connErrs +=1
+            if @connErrs > 4
+              for _attr of @attributes
+                @attributeValues[_attr] = 0
+                @emit _attr, @attributeValues[_attr]
+              @connErrs = 0
         )
 
       @_currentRequest = @requestPromise unless @_currentRequest?
@@ -356,7 +361,7 @@ module.exports = (env) ->
       @sensorIp = @config.sensorIp
       @url = "http://#{@sensorIp}/data.json"
       @timeout = @config.interval * 60000 # Check for changes every interval in minutes
-
+      @connErrs = 0
       super()
       @requestData()
 
@@ -401,13 +406,16 @@ module.exports = (env) ->
           @_currentRequest = Promise.resolve()
         )
         .catch((err) =>
-          @_setAttribute "PM10", 0
-          @_setAttribute "PM25", 0
-          @_setAttribute "AQI", 0
-          @_setAttribute "AQI_CODE", "Unknown"
-          @_setAttribute "AQI_AIR_QUALITY", "Unknown"
-          #env.logger.error(err.message)
-          #env.logger.debug(err.stack)
+          if err.indexOff('ETIMEDOUT') >= 0
+            env.logger.error("Luftdaten is not responding")
+            @connErrs +=1
+            if @connErrs > 4
+              @_setAttribute "PM10", 0
+              @_setAttribute "PM25", 0
+              @_setAttribute "AQI", 0
+              @_setAttribute "AQI_CODE", "Unknown"
+              @_setAttribute "AQI_AIR_QUALITY", "Unknown"
+              @connErrs = 0
          )
 
       @_currentRequest = @requestPromise unless @_currentRequest?
