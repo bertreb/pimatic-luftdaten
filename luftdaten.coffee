@@ -277,14 +277,14 @@ module.exports = (env) ->
           @connErrs = 0
         )
         .catch((err) =>
-          if err.indexOff('ETIMEDOUT') >= 0
-            env.logger.error("Luftdaten is not responding")
+          if err.indexOf('ETIMEDOUT') >= 0
             @connErrs +=1
             if @connErrs > 4
               for _attr of @attributes
                 @attributeValues[_attr] = 0
                 @emit _attr, @attributeValues[_attr]
               @connErrs = 0
+              env.logger.error("Luftdaten server is not responding")
         )
 
       @_currentRequest = @requestPromise unless @_currentRequest?
@@ -406,8 +406,7 @@ module.exports = (env) ->
           @_currentRequest = Promise.resolve()
         )
         .catch((err) =>
-          if err.indexOff('ETIMEDOUT') >= 0
-            env.logger.error("Luftdaten is not responding")
+          if err.indexOf('ETIMEDOUT') >= 0
             @connErrs +=1
             if @connErrs > 4
               @_setAttribute "PM10", 0
@@ -416,7 +415,8 @@ module.exports = (env) ->
               @_setAttribute "AQI_CODE", "Unknown"
               @_setAttribute "AQI_AIR_QUALITY", "Unknown"
               @connErrs = 0
-         )
+              env.logger.error("Luftdaten server is not responding")
+       )
 
       @_currentRequest = @requestPromise unless @_currentRequest?
       @requestTimeout = setTimeout(@requestData, @timeout)
