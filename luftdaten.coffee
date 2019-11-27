@@ -110,11 +110,11 @@ module.exports = (env) ->
       @connErrs = 0
       if @sendorId is null and (@latitude is null or @longitude is null)
         throw new Error("No sensor configured")
-      
+
       @attributes = _.cloneDeep(@attributes)
       @usedSensors = {}
       @sensorId = if @sensorId? then @sensorId.replace(/\s+/g,'')
-      @_requestTypes = 
+      @_requestTypes =
         single: 1
         multi: 2
         area: 3
@@ -221,7 +221,7 @@ module.exports = (env) ->
                     if _val.value_type in @_luftdaten.sensordatavalues
                       #update value of existing value_type
                       @_luftdaten.sensordatavalues[_val.value_type].value = String _record.sensordatavalues[_val.value_type].value
-                    else 
+                    else
                       #add closer missing value_type, value and id
                       env.logger.debug _val.value_type + " added to sensor data, sensorID: " + _record.sensor.id
                       @_luftdaten.sensordatavalues[_val.value_type] =
@@ -240,7 +240,7 @@ module.exports = (env) ->
           if not @_luftdaten?
             env.logger.debug "no data from " + @url
             return
- 
+
           for k, val of @_luftdaten.sensordatavalues
             if (val.value_type).match("P1")
               @attributeValues.PM10 = Number(Math.round(val.value+'e1')+'e-1')
@@ -277,14 +277,15 @@ module.exports = (env) ->
           @connErrs = 0
         )
         .catch((err) =>
-          if err.indexOf('ETIMEDOUT') >= 0
-            @connErrs +=1
-            if @connErrs > 4
-              for _attr of @attributes
-                @attributeValues[_attr] = 0
-                @emit _attr, @attributeValues[_attr]
-              @connErrs = 0
-              env.logger.error("Luftdaten server is not responding")
+          if err instanceof String
+            if err.indexOf('ETIMEDOUT') >= 0
+              @connErrs +=1
+              if @connErrs > 4
+                for _attr of @attributes
+                  @attributeValues[_attr] = 0
+                  @emit _attr, @attributeValues[_attr]
+                @connErrs = 0
+                env.logger.error("Luftdaten server is not responding")
         )
 
       @_currentRequest = @requestPromise unless @_currentRequest?
@@ -408,16 +409,17 @@ module.exports = (env) ->
           @_currentRequest = Promise.resolve()
         )
         .catch((err) =>
-          if err.indexOf('ETIMEDOUT') >= 0
-            @connErrs +=1
-            if @connErrs > 4
-              @_setAttribute "PM10", 0
-              @_setAttribute "PM25", 0
-              @_setAttribute "AQI", 0
-              @_setAttribute "AQI_CODE", "Unknown"
-              @_setAttribute "AQI_AIR_QUALITY", "Unknown"
-              @connErrs = 0
-              env.logger.error("Luftdaten server is not responding")
+          if err instanceof String
+            if err.indexOf('ETIMEDOUT') >= 0
+              @connErrs +=1
+              if @connErrs > 4
+                @_setAttribute "PM10", 0
+                @_setAttribute "PM25", 0
+                @_setAttribute "AQI", 0
+                @_setAttribute "AQI_CODE", "Unknown"
+                @_setAttribute "AQI_AIR_QUALITY", "Unknown"
+                @connErrs = 0
+                env.logger.error("Luftdaten server is not responding")
        )
 
       @_currentRequest = @requestPromise unless @_currentRequest?
