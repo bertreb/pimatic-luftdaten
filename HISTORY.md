@@ -22,3 +22,5 @@
   * edit readme.md
 * 20191122, v0.4.5
   * better handling of ETIMEDOUT error. After 5 consecutive ETIMEDOUT error's, an error message and reset of values.
+* 20191127, v0.4.6
+  * bugfix HomeDevice.

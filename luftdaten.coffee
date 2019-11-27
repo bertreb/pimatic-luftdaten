@@ -362,6 +362,8 @@ module.exports = (env) ->
       @url = "http://#{@sensorIp}/data.json"
       @timeout = @config.interval * 60000 # Check for changes every interval in minutes
       @connErrs = 0
+      @PM10 = @PM25 = @TEMP = @HUM = @BAR = @WIFI = 0
+
       super()
       @requestData()
 
@@ -375,31 +377,31 @@ module.exports = (env) ->
         .then((data) =>
           d = JSON.parse(data)
           #reset all values
-          PM10 = PM25 = TEMP = HUM = BAR = WIFI = 0
+          @PM10 = @PM25 = @TEMP = @HUM = @BAR = @WIFI = 0
           for k, val of d.sensordatavalues
               if (val.value_type).match("P1")
-                PM10 = Number(Math.round(val.value+'e1')+'e-1') #PM10
+                @PM10 = Number(Math.round(val.value+'e1')+'e-1') #PM10
               if (val.value_type).match("P2")
-                PM25 = Number(Math.round(val.value+'e1')+'e-1') #PM2.5
+                @PM25 = Number(Math.round(val.value+'e1')+'e-1') #PM2.5
               if (val.value_type).match("temperature")
-                TEMP = Number(Math.round(val.value+'e1')+'e-1') #Temperature
+                @TEMP = Number(Math.round(val.value+'e1')+'e-1') #Temperature
               if (val.value_type).match("humidity")
-                HUM = Number(Math.round(val.value+'e1')+'e-1') #Humidity
+                @HUM = Number(Math.round(val.value+'e1')+'e-1') #Humidity
               if (val.value_type).match("signal")
-                WIFI = Number(Math.round(val.value+'e1')+'e-1') #Signal
+                @WIFI = Number(Math.round(val.value+'e1')+'e-1') #Signal
               if (val.value_type).match("pressure")
-                BAR = Number(Math.round(val.value/100+'e1')+'e-1') #Pressure
+                @BAR = Number(Math.round(val.value/100+'e1')+'e-1') #Pressure
 
-          lAqi = Math.max(calc.pm10(PM10), calc.pm25(PM25))
+          lAqi = Math.max(calc.pm10(@PM10), calc.pm25(@PM25))
           lAqi = Math.min(lAqi, 500)
           lAqi = Math.max(lAqi, 0)
 
-          @_setAttribute "PM10", PM10
-          @_setAttribute "PM25", PM25
-          @_setAttribute "TEMP", TEMP
-          @_setAttribute "HUM", HUM
-          @_setAttribute "BAR", BAR
-          @_setAttribute "WIFI", WIFI
+          @_setAttribute "PM10", @PM10
+          @_setAttribute "PM25", @PM25
+          @_setAttribute "TEMP", @TEMP
+          @_setAttribute "HUM", @HUM
+          @_setAttribute "BAR", @BAR
+          @_setAttribute "WIFI", @WIFI
           @_setAttribute "AQI", lAqi
           @_setAttribute "AQI_CODE", calc.aqi_color(lAqi)
           @_setAttribute "AQI_AIR_QUALITY", calc.aqi_label(lAqi)
